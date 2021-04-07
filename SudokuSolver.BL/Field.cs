@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace SudokuSolver.BL
 {
-    class Field
+    public class Field
     {
         private int value;
         public List<int> PossibleValues { get; set; }
-        public bool IsSet { get; set; }
+        public bool IsSet { get; private set; }
         public int Value
         {
             get
