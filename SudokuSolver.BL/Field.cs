@@ -64,5 +64,13 @@ namespace SudokuSolver.BL
                 throw new InvalidOperationException("This field doesn't have any possible values to remove.");
             }
         }
+
+        public void RemovePossibility(IEnumerable<int> items)
+        {
+            foreach (var item in items)
+            {
+                RemovePossibility(item);
+            }
+        }
     }
 }
