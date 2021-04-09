@@ -28,6 +28,10 @@ namespace SudokuSolver.BL
                 var valueToRemove = field.PossibleValues.Except(ValueToSet);
                 field.RemovePossibility(valueToRemove);
             }
+            if(ValueToSet.Count == 0)
+            {
+                IsDone = true;
+            }
         }
         
     }
