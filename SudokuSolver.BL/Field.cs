@@ -51,9 +51,11 @@ namespace SudokuSolver.BL
 
         public void RemovePossibility(int item)
         {
+            Console.WriteLine("Removing " + item);
             if(PossibleValues != null)
             {
                 PossibleValues.Remove(item);
+                Console.WriteLine("removed");
                 if (PossibleValues.Count == 1)
                 {
                     Value = PossibleValues[0];
@@ -63,13 +65,16 @@ namespace SudokuSolver.BL
             {
                 throw new InvalidOperationException("This field doesn't have any possible values to remove.");
             }
+            Console.WriteLine("End removing");
         }
 
-        public void RemovePossibility(IEnumerable<int> items)
+        public void RemovePossibility(List<int> items)
         {
-            foreach (var item in items)
+            foreach(var item in items)
             {
+                Console.WriteLine("Start removing " + item);
                 RemovePossibility(item);
+                Console.WriteLine(item + " removed");
             }
         }
     }

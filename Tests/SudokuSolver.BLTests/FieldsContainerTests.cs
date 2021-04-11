@@ -24,13 +24,27 @@ namespace SudokuSolver.BLTests
         public void CleerValuesToSetTests()
         {
             var actual = new FieldsContainer();
-            var expectedValuesToSet = new List<int>() { 1, 2, 4, 5, 7, 8, 9 };
+            var expected = new List<int>() { 1, 2, 4, 5, 7, 8, 9 };
 
             actual.Fields.Add(new Field(3));
             actual.Fields.Add(new Field(6));
+            actual.Fields.Add(new Field());
             actual.ClearPossibilities();
 
-            CollectionAssert.AreEqual(expectedValuesToSet, actual.ValueToSet);
+            CollectionAssert.AreEqual(expected, actual.ValueToSet);
+            CollectionAssert.AreEqual(expected, actual.Fields[2].PossibleValues);
+        }
+
+        [TestMethod]
+        public void ComplitedContainer()
+        {
+            var actual = new FieldsContainer();
+
+            for (int i = 1; i <= 9; i++)
+                actual.Fields.Add(new Field(i));
+            actual.ClearPossibilities();
+
+            Assert.IsTrue(actual.IsDone);
         }
     }
 }

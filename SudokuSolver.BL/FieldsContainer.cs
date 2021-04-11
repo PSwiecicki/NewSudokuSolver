@@ -25,7 +25,7 @@ namespace SudokuSolver.BL
             ValueToSet.RemoveAll(v => Fields.Where(f => f.IsSet).Select(f => f.Value).Contains(v));
             foreach(var field in Fields.Where(x => !x.IsSet))
             {
-                var valueToRemove = field.PossibleValues.Except(ValueToSet);
+                var valueToRemove = field.PossibleValues.Except(ValueToSet).ToList();
                 field.RemovePossibility(valueToRemove);
             }
             if(ValueToSet.Count == 0)
