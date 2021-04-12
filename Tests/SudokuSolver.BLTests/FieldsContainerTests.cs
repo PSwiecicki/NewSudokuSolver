@@ -40,7 +40,7 @@ namespace SudokuSolver.BLTests
             var actual = new FieldsContainer();
             
             for(int i = 0; i < 9; i++)
-                actual.SetField(i, i + 1);
+                actual.Fields[i].Value = i + 1;
             actual.ClearPossibilities();
 
             Assert.IsTrue(actual.IsDone);
@@ -51,8 +51,8 @@ namespace SudokuSolver.BLTests
         {
             var actual = new FieldsContainer();
 
-            actual.SetField(1, 1);
-            actual.SetField(5, 5);
+            actual.Fields[1].Value = 1;
+            actual.Fields[5].Value = 5;
 
             Assert.AreEqual(1, actual.Fields[1].Value);
             Assert.AreEqual(5, actual.Fields[5].Value);
@@ -64,9 +64,9 @@ namespace SudokuSolver.BLTests
             var actual = new FieldsContainer();
             var expected = "|1|0|3|0|0|0|0|0|9|";
 
-            actual.SetField(0, 1);
-            actual.SetField(2, 3);
-            actual.SetField(8, 9);
+            actual.Fields[0].Value = 1;
+            actual.Fields[2].Value = 3;
+            actual.Fields[8].Value = 9;
 
             Assert.AreEqual(expected, actual.ToString());
         }

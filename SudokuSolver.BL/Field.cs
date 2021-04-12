@@ -25,7 +25,7 @@ namespace SudokuSolver.BL
                     PossibleValues = new List<int>() { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
                     IsSet = false;
                 }
-                else if(value >= 1 && value <= 9)
+                else if(value >= 1 && value <= 9 && PossibleValues.Contains(value))
                 {
                     this.value = value;
                     PossibleValues = null;
@@ -39,23 +39,16 @@ namespace SudokuSolver.BL
 
         }
 
-        public Field() : this(0)
-        {
-
-        }
-
-        public Field(int value)
+        public Field(int value = 0)
         {
             Value = value;
         }
 
         public void RemovePossibility(int item)
         {
-            Console.WriteLine("Removing " + item);
             if(PossibleValues != null)
             {
                 PossibleValues.Remove(item);
-                Console.WriteLine("removed");
                 if (PossibleValues.Count == 1)
                 {
                     Value = PossibleValues[0];
@@ -65,16 +58,13 @@ namespace SudokuSolver.BL
             {
                 throw new InvalidOperationException("This field doesn't have any possible values to remove.");
             }
-            Console.WriteLine("End removing");
         }
 
         public void RemovePossibility(List<int> items)
         {
             foreach(var item in items)
             {
-                Console.WriteLine("Start removing " + item);
                 RemovePossibility(item);
-                Console.WriteLine(item + " removed");
             }
         }
 

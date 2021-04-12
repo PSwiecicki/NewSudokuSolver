@@ -8,21 +8,13 @@ namespace SudokuSolver.BL
 {
     public class FieldsContainer
     {
-        private List<Field> fields;
-        public IReadOnlyList<Field> Fields { 
-            get
-            {
-                return fields.AsReadOnly();
-            }
-        }
+        public List<Field> Fields { get; set; }
         public List<int> ValueToSet { get; private set; }
         public bool IsDone { get; private set; }
 
         public FieldsContainer()
         {
-            fields = new List<Field>(9);
-            for (int i = 0; i < 9; i++)
-                fields.Add(new Field());
+            Fields = new List<Field>(9);
             ValueToSet = new List<int>() { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
             IsDone = false;
         }
@@ -30,8 +22,8 @@ namespace SudokuSolver.BL
         public void ClearPossibilities()
         {
             //Remove all value which are set
-            ValueToSet.RemoveAll(v => fields.Where(f => f.IsSet).Select(f => f.Value).Contains(v));
-            foreach(var field in fields.Where(x => !x.IsSet))
+            ValueToSet.RemoveAll(v => Fields.Where(f => f.IsSet).Select(f => f.Value).Contains(v));
+            foreach(var field in Fields.Where(x => !x.IsSet))
             {
                 var valueToRemove = field.PossibleValues.Except(ValueToSet).ToList();
                 field.RemovePossibility(valueToRemove);
@@ -42,16 +34,10 @@ namespace SudokuSolver.BL
             }
         }
 
-        public void SetField(int index, int value)
-        {
-            if (value > 0 && value < 10)
-                fields[index].Value = value;
-        }
-
         public override string ToString()
         {
             string result = "|";
-            foreach (var field in fields)
+            foreach (var field in Fields)
                 result += field.Value + "|";
             return result;
         }
