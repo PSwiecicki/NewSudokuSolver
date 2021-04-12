@@ -8,27 +8,26 @@ namespace SudokuSolver.BLTests
     public class FieldsContainerTests
     {
         [TestMethod]
-        public void NewFieldsContainer()
+        public void NewFieldsContainerTest()
         {
             var actual = new FieldsContainer();
             var expectedIsDone = false;
-            var expectedFields = new List<Field>();
+            var expectedFields = 9;
             var expectedValuesToSet = new List<int>() { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
 
             Assert.AreEqual(expectedIsDone, actual.IsDone);
-            CollectionAssert.AreEqual(expectedFields, actual.Fields);
+            Assert.AreEqual(expectedFields, actual.Fields.Count);
             CollectionAssert.AreEqual(expectedValuesToSet, actual.ValueToSet);
         }
 
         [TestMethod]
-        public void CleerValuesToSetTests()
+        public void CleerValuesToSetTest()
         {
             var actual = new FieldsContainer();
             var expected = new List<int>() { 1, 2, 4, 5, 7, 8, 9 };
 
-            actual.Fields.Add(new Field(3));
-            actual.Fields.Add(new Field(6));
-            actual.Fields.Add(new Field());
+            actual.SetField(0, 3);
+            actual.SetField(1, 6);
             actual.ClearPossibilities();
 
             CollectionAssert.AreEqual(expected, actual.ValueToSet);
@@ -36,15 +35,41 @@ namespace SudokuSolver.BLTests
         }
 
         [TestMethod]
-        public void ComplitedContainer()
+        public void ComplitedContainerTest()
         {
             var actual = new FieldsContainer();
-
-            for (int i = 1; i <= 9; i++)
-                actual.Fields.Add(new Field(i));
+            
+            for(int i = 0; i < 9; i++)
+                actual.SetField(i, i + 1);
             actual.ClearPossibilities();
 
             Assert.IsTrue(actual.IsDone);
         }
+
+        [TestMethod]
+        public void SetFieldsTest()
+        {
+            var actual = new FieldsContainer();
+
+            actual.SetField(1, 1);
+            actual.SetField(5, 5);
+
+            Assert.AreEqual(1, actual.Fields[1].Value);
+            Assert.AreEqual(5, actual.Fields[5].Value);
+        }
+
+        [TestMethod]
+        public void ToStringTest()
+        {
+            var actual = new FieldsContainer();
+            var expected = "|1|0|3|0|0|0|0|0|9|";
+
+            actual.SetField(0, 1);
+            actual.SetField(2, 3);
+            actual.SetField(8, 9);
+
+            Assert.AreEqual(expected, actual.ToString());
+        }
+        
     }
 }

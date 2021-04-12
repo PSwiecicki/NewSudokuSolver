@@ -4,5 +4,6 @@ namespace SudokuSolver.BL
 {
     public class Sudoku
     {
+
     }
 }
