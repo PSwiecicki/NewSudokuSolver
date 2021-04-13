@@ -65,6 +65,19 @@ namespace SudokuSolver.BL
         
         //If one of possibilities is in 2 or 3 fields of one row and that fields are in the same square, then other fields in that square can't have that possibiliti value.
         //Same with column
+
+        private void SamePossibilities()
+        {
+            foreach(var container in rows.Concat(columns).Where(x => !x.IsDone))
+            {
+                SamePossibilitiesInRow(container);
+            }
+            foreach(var container in squares.Where(x => !x.IsDone))
+            {
+                SamePossibilitiesInSquare(container);
+            }
+        }
+
         public void SamePossibilitiesInRow(FieldsContainer fieldsContainer)
         {
             foreach (var value in fieldsContainer.ValueToSet)
@@ -102,5 +115,58 @@ namespace SudokuSolver.BL
             }
         }
 
+        public void SamePossibilitiesInSquare(FieldsContainer fieldsContainer)
+        {
+            foreach (var value in fieldsContainer.ValueToSet)
+            {
+                var fieldsWithValue = fieldsContainer.Fields.Where(x => x.PossibleValues.Contains(value)).ToList();
+                if (fieldsWithValue.Count == 2 || fieldsWithValue.Count == 3)
+                {
+                    int firstFieldRowIndex = -1;
+                    int firstFieldColumnIndex = -1;
+                    foreach (var row in rows)
+                    {
+                        if (row.Fields.Contains(fieldsWithValue[0]))
+                        {
+                            firstFieldRowIndex = rows.IndexOf(row);
+                            break;
+                        }
+                    }
+                    foreach (var column in columns)
+                    {
+                        if (column.Fields.Contains(fieldsWithValue[0]))
+                        {
+                            firstFieldColumnIndex = columns.IndexOf(column);
+                            break;
+                        }
+                    }
+                    bool areAllValueInRow = true;
+                    bool areAllValueInColumn = true;
+                    foreach (var field in fieldsWithValue)
+                    {
+                        if (!rows[firstFieldRowIndex].Fields.Contains(field))
+                            areAllValueInRow = false;
+                        if (!columns[firstFieldColumnIndex].Fields.Contains(field))
+                            areAllValueInColumn = false;
+                    }
+                    if (areAllValueInRow)
+                    {
+                        foreach (var field in rows[firstFieldRowIndex].Fields.Where(x => !x.IsSet))
+                        {
+                            if (!fieldsWithValue.Contains(field))
+                                field.PossibleValues.Remove(value);
+                        }
+                    }
+                    if (areAllValueInColumn)
+                    {
+                        foreach (var field in columns[firstFieldColumnIndex].Fields.Where(x => !x.IsSet))
+                        {
+                            if (!fieldsWithValue.Contains(field))
+                                field.PossibleValues.Remove(value);
+                        }
+                    }
+                }
+            }
+        }
     }
 }
