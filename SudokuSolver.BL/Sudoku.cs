@@ -40,6 +40,18 @@ namespace SudokuSolver.BL
             }
         }
 
+        public void InsertData(int[,] dataTable)
+        {
+            if(dataTable.Length == 81)
+                for(int i = 0; i < 9; i++)
+                {
+                    for(int j = 0; j < 9; j++)
+                    {
+                        rows[i].Fields[j].Value = dataTable[i, j];
+                    }
+                }
+        }
+
         //Algorithms
 
         //If one field can be set to special value, this method set that value.
@@ -167,6 +179,24 @@ namespace SudokuSolver.BL
                     }
                 }
             }
+        }
+
+        public void ClearAllPossibilities()
+        {
+            foreach (var container in rows.Concat(columns).Concat(squares).Where(x => !x.IsDone))
+            {
+                container.ClearPossibilities();
+            }
+        }
+
+        public override string ToString()
+        {
+            string result = "+-+-+-+-+-+-+-+-+-+\n";
+            foreach(var row in rows)
+            {
+                result += row.ToString() + "\n+-+-+-+-+-+-+-+-+-+\n";
+            }
+            return base.ToString();
         }
     }
 }
