@@ -196,7 +196,7 @@ namespace SudokuSolver.BL
             {
                 result += row.ToString() + "\n+-+-+-+-+-+-+-+-+-+\n";
             }
-            return base.ToString();
+            return result;
         }
     }
 }

@@ -72,7 +72,7 @@ namespace SudokuSolver.BLTests
         }
 
         [TestMethod]
-        public void MyTestMethod()
+        public void WrongRemovePossibilityTest()
         {
             var field = new Field(8);
 

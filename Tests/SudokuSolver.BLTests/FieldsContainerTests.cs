@@ -11,6 +11,8 @@ namespace SudokuSolver.BLTests
         public void NewFieldsContainerTest()
         {
             var actual = new FieldsContainer();
+            for (int i = 0; i < 9; i++)
+                actual.Fields.Add(new Field());
             var expectedIsDone = false;
             var expectedFields = 9;
             var expectedValuesToSet = new List<int>() { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
@@ -24,10 +26,12 @@ namespace SudokuSolver.BLTests
         public void CleerValuesToSetTest()
         {
             var actual = new FieldsContainer();
+            for (int i = 0; i < 9; i++)
+                actual.Fields.Add(new Field());
             var expected = new List<int>() { 1, 2, 4, 5, 7, 8, 9 };
 
-            actual.SetField(0, 3);
-            actual.SetField(1, 6);
+            actual.Fields[0].Value = 3;
+            actual.Fields[1].Value = 6;
             actual.ClearPossibilities();
 
             CollectionAssert.AreEqual(expected, actual.ValueToSet);
@@ -38,8 +42,10 @@ namespace SudokuSolver.BLTests
         public void ComplitedContainerTest()
         {
             var actual = new FieldsContainer();
-            
-            for(int i = 0; i < 9; i++)
+            for (int i = 0; i < 9; i++)
+                actual.Fields.Add(new Field());
+
+            for (int i = 0; i < 9; i++)
                 actual.Fields[i].Value = i + 1;
             actual.ClearPossibilities();
 
@@ -50,6 +56,8 @@ namespace SudokuSolver.BLTests
         public void SetFieldsTest()
         {
             var actual = new FieldsContainer();
+            for (int i = 0; i < 9; i++)
+                actual.Fields.Add(new Field());
 
             actual.Fields[1].Value = 1;
             actual.Fields[5].Value = 5;
@@ -62,6 +70,8 @@ namespace SudokuSolver.BLTests
         public void ToStringTest()
         {
             var actual = new FieldsContainer();
+            for (int i = 0; i < 9; i++)
+                actual.Fields.Add(new Field());
             var expected = "|1|0|3|0|0|0|0|0|9|";
 
             actual.Fields[0].Value = 1;
