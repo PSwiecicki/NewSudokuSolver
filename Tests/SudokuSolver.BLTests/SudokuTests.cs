@@ -46,5 +46,27 @@ namespace SudokuSolver.BLTests
 
             Assert.AreEqual(expected, actual.ToString());
         }
+
+        [TestMethod]
+        public void SudokuIsDoneTest()
+        {
+            Sudoku actual = new Sudoku();
+            int[,] table = new int[,]
+            {
+                {1, 2, 3, 4, 5, 6, 7, 8, 9 },
+                {2, 3, 4, 5, 6, 7, 8, 9, 1 },
+                {3, 4, 5, 6, 7, 8, 9, 1, 2 },
+                {4, 5, 6, 7, 8, 9, 1, 2, 3 },
+                {5, 6, 7, 8, 9, 1, 2, 3, 4 },
+                {6, 7, 8, 9, 1, 2, 3, 4, 5 },
+                {7, 8, 9, 1, 2, 3, 4, 5, 6 },
+                {8, 9, 1, 2, 3, 4, 5, 6, 7 },
+                {9, 1, 2, 3, 4, 5, 6, 7, 8 }
+            };
+
+            actual.InsertData(table);
+
+            Assert.IsTrue(actual.IsDone);
+        }
     }
 }

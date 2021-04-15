@@ -9,7 +9,7 @@ namespace SudokuSolver.BL
     public class Field
     {
         private int value;
-        public List<int> PossibleValues { get; set; }
+        public List<int> PossibleValues { get; private set; }
         public bool IsSet { get; private set; }
         public int Value
         {
@@ -17,7 +17,7 @@ namespace SudokuSolver.BL
             {
                 return value;
             }
-            set
+            private set
             {
                 PossibleValues = new List<int>() { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
                 if (value == 0)
@@ -66,6 +66,20 @@ namespace SudokuSolver.BL
             {
                 RemovePossibility(item);
             }
+        }
+
+        public bool SetValue(int value)
+        {
+            bool result = true;
+            try
+            {
+                Value = value;
+            }
+            catch
+            {
+                result = false;
+            }
+            return result;
         }
     }
 }

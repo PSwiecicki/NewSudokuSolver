@@ -10,6 +10,18 @@ namespace SudokuSolver.BL
         private List<FieldsContainer> columns;
         private List<FieldsContainer> squares;
 
+        public bool IsDone 
+        {
+            get
+            {
+                bool result = true;
+                foreach (var row in rows)
+                    result &= row.IsDone;
+                return result;
+            }
+        }
+        
+
         public Sudoku()
         {
             rows = new List<FieldsContainer>();
@@ -189,6 +201,7 @@ namespace SudokuSolver.BL
             }
         }
 
+        
         public override string ToString()
         {
             string result = "+-+-+-+-+-+-+-+-+-+\n";
