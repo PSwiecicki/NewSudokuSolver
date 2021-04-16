@@ -36,7 +36,7 @@ namespace SudokuSolver.BL
 
         public void InsertValue(int index, int value)
         {
-            Val
+            
         }
 
         public override string ToString()

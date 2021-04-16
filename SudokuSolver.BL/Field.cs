@@ -33,7 +33,7 @@ namespace SudokuSolver.BL
                 }
                 else
                 {
-                    throw new ArgumentOutOfRangeException("Argument value should be between 1 to 9.");
+                    throw new ArgumentOutOfRangeException(paramName: nameof(value), message: "Argument value should be between 1 to 9.");
                 }
             }
 
@@ -41,31 +41,35 @@ namespace SudokuSolver.BL
 
         public Field(int value = 0)
         {
-            Value = value;
+            SetValue(value);
         }
 
-        public void RemovePossibility(int item)
+        public bool RemovePossibility(int item)
         {
+            bool result;
             if(PossibleValues != null)
             {
-                PossibleValues.Remove(item);
+                result = PossibleValues.Remove(item);
                 if (PossibleValues.Count == 1)
                 {
-                    Value = PossibleValues[0];
+                    SetValue(PossibleValues[0]);
                 }
             }
             else
             {
-                throw new InvalidOperationException("This field doesn't have any possible values to remove.");
+                result = false;
             }
+            return result;
         }
 
-        public void RemovePossibility(List<int> items)
+        public bool RemovePossibility(List<int> items)
         {
+            bool result = false;
             foreach(var item in items)
             {
-                RemovePossibility(item);
+                result |= RemovePossibility(item);
             }
+            return result;
         }
 
         public bool SetValue(int value)

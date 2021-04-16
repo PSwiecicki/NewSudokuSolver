@@ -59,7 +59,7 @@ namespace SudokuSolver.BL
                 {
                     for(int j = 0; j < 9; j++)
                     {
-                        rows[i].Fields[j].Value = dataTable[i, j];
+                        //rows[i].Fields[j].Value = dataTable[i, j];
                     }
                 }
         }
@@ -82,7 +82,7 @@ namespace SudokuSolver.BL
                 var fieldsWithValue = fieldsContainer.Fields.Where(x => x.PossibleValues.Contains(value)).ToList();
                 if (fieldsWithValue.Count == 1)
                 {
-                    fieldsWithValue[0].Value = value;
+                    //fieldsWithValue[0].Value = value;
                 }
             }
         }

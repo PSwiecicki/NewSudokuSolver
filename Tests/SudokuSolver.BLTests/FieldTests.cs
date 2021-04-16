@@ -35,14 +35,29 @@ namespace SudokuSolver.BLTests
         }
 
         [TestMethod]
-        public void EmptyFieldAfterSetTest()
+        public void SetEmptyFieldTest()
         {
             var actual = new Field();
             var exceptedValue = 2;
             var exceptedIsSet = true;
             List<int> exceptedPossibilities = null;
 
-            actual.Value = 2;
+            actual.SetValue(2);
+
+            Assert.AreEqual(exceptedValue, actual.Value);
+            Assert.AreEqual(exceptedIsSet, actual.IsSet);
+            CollectionAssert.AreEqual(exceptedPossibilities, actual.PossibleValues);
+        }
+
+        [TestMethod]
+        public void SetFieldByLeftOnePossibilityTest()
+        {
+            var actual = new Field();
+            var exceptedValue = 9;
+            var exceptedIsSet = true;
+            List<int> exceptedPossibilities = null;
+
+            actual.RemovePossibility(new List<int>() { 1, 2, 3, 4, 5, 6, 7, 8 });
 
             Assert.AreEqual(exceptedValue, actual.Value);
             Assert.AreEqual(exceptedIsSet, actual.IsSet);
@@ -66,17 +81,24 @@ namespace SudokuSolver.BLTests
         }
 
         [TestMethod]
-        public void WrongValueTest()
+        public void NewFieldWithWrongValueTest()
         {
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => new Field(10));          
+            var actual = new Field(10);
+            var exceptedValue = 0;
+            var exceptedIsSet = false;
+            var exceptedPossibilities = new List<int>() { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+
+            Assert.AreEqual(exceptedValue, actual.Value);
+            Assert.AreEqual(exceptedIsSet, actual.IsSet);
+            CollectionAssert.AreEqual(exceptedPossibilities, actual.PossibleValues);
         }
 
         [TestMethod]
-        public void WrongRemovePossibilityTest()
+        public void RemovePossibilityInSettedFieldTest()
         {
             var field = new Field(8);
 
-            Assert.ThrowsException<InvalidOperationException>(() => field.RemovePossibility(4));
+            Assert.IsFalse(field.RemovePossibility(4));
         }
     }
 }
