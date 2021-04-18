@@ -21,7 +21,7 @@ namespace SudokuSolver.BL
 
         private void ClearPossibilities(int value)
         {
-            foreach(var field in Fields.Where(f => f.PossibleValues.Contains(value)))
+            foreach(var field in Fields.Where(f => !f.IsSet))
             {
                 field.RemovePossibility(value);
                 if (field.IsSet)
@@ -48,9 +48,16 @@ namespace SudokuSolver.BL
 
         public void InsertValue(int index, int value)
         {
-            if(index>=0 && index < Fields.Count)
-                if(Fields[index].SetValue(value))
+            if (index >= 0 && index < Fields.Count)
+            {
+                if (Fields[index].SetValue(value))
+                {
                     ClearPossibilities(value);
+                    ValueToSet.Remove(value);
+                }
+                if (ValueToSet.Count == 0)
+                    IsDone = true;
+            }
         }
 
         public override string ToString()

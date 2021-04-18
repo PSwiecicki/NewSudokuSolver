@@ -22,22 +22,22 @@ namespace SudokuSolver.BLTests
             CollectionAssert.AreEqual(expectedValuesToSet, actual.ValueToSet);
         }
 
+        
         [TestMethod]
-        public void CleerValuesToSetTest()
+        public void CleerValuesBySetTest()
         {
             var actual = new FieldsContainer();
             for (int i = 0; i < 9; i++)
                 actual.Fields.Add(new Field());
             var expected = new List<int>() { 1, 2, 4, 5, 7, 8, 9 };
 
-            //actual.Fields[0].Value = 3;
-            //actual.Fields[1].Value = 6;
-            //actual.ClearPossibilities();
+            actual.InsertValue(0, 3);
+            actual.InsertValue(1, 6);
 
             CollectionAssert.AreEqual(expected, actual.ValueToSet);
             CollectionAssert.AreEqual(expected, actual.Fields[2].PossibleValues);
         }
-
+        
         [TestMethod]
         public void ComplitedContainerTest()
         {
@@ -46,26 +46,25 @@ namespace SudokuSolver.BLTests
                 actual.Fields.Add(new Field());
 
             for (int i = 0; i < 9; i++)
-                //actual.Fields[i].Value = i + 1;
-            actual.ClearPossibilities();
+                actual.InsertValue(i, i + 1);
 
             Assert.IsTrue(actual.IsDone);
         }
-
+        
         [TestMethod]
-        public void SetFieldsTest()
+        public void InsertValueTest()
         {
             var actual = new FieldsContainer();
             for (int i = 0; i < 9; i++)
                 actual.Fields.Add(new Field());
 
-            //actual.Fields[1].Value = 1;
-            //.Fields[5].Value = 5;
+            actual.InsertValue(1, 1);
+            actual.InsertValue(5, 5);
 
             Assert.AreEqual(1, actual.Fields[1].Value);
             Assert.AreEqual(5, actual.Fields[5].Value);
         }
-
+        
         [TestMethod]
         public void ToStringTest()
         {
@@ -74,12 +73,12 @@ namespace SudokuSolver.BLTests
                 actual.Fields.Add(new Field());
             var expected = "|1|0|3|0|0|0|0|0|9|";
 
-            //actual.Fields[0].Value = 1;
-            //actual.Fields[2].Value = 3;
-            //actual.Fields[8].Value = 9;
+
+            actual.InsertValue(0, 1);
+            actual.InsertValue(2, 3);
+            actual.InsertValue(8, 9);
 
             Assert.AreEqual(expected, actual.ToString());
         }
-        
     }
 }
