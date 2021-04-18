@@ -19,6 +19,16 @@ namespace SudokuSolver.BL
             IsDone = false;
         }
 
+        private void ClearPossibilities(int value)
+        {
+            foreach(var field in Fields.Where(f => f.PossibleValues.Contains(value)))
+            {
+                field.RemovePossibility(value);
+                if (field.IsSet)
+                    ClearPossibilities(field.Value);
+            }
+        }
+
         public void ClearPossibilities()
         {
             //Remove all value which are set
@@ -27,16 +37,20 @@ namespace SudokuSolver.BL
             {
                 var valueToRemove = field.PossibleValues.Except(ValueToSet).ToList();
                 field.RemovePossibility(valueToRemove);
+                if(field.IsSet)
+                {
+                    ValueToSet.Remove(field.Value);   
+                }
             }
             if(ValueToSet.Count == 0)
-            {
                 IsDone = true;
-            }
         }
 
         public void InsertValue(int index, int value)
         {
-            
+            if(index>=0 && index < Fields.Count)
+                if(Fields[index].SetValue(value))
+                    ClearPossibilities(value);
         }
 
         public override string ToString()
