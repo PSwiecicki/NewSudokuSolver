@@ -35,14 +35,14 @@ namespace SudokuSolver.BLTests
         }
 
         [TestMethod]
-        public void SetEmptyFieldTest()
+        public void SetValueInEmptyFieldTest()
         {
             var actual = new Field();
             var exceptedValue = 2;
             var exceptedIsSet = true;
             List<int> exceptedPossibilities = null;
 
-            actual.SetValue(2);
+            Assert.IsTrue(actual.SetValue(2));
 
             Assert.AreEqual(exceptedValue, actual.Value);
             Assert.AreEqual(exceptedIsSet, actual.IsSet);
@@ -99,6 +99,21 @@ namespace SudokuSolver.BLTests
             var field = new Field(8);
 
             Assert.IsFalse(field.RemovePossibility(4));
+        }
+
+        [TestMethod]
+        public void SetWrongValueTest()
+        {
+            var actual = new Field();
+            var exceptedValue = 0;
+            var exceptedIsSet = false;
+            List<int> exceptedPossibilities = new List<int>() { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+
+            Assert.IsFalse(actual.SetValue(123123));
+
+            Assert.AreEqual(exceptedValue, actual.Value);
+            Assert.AreEqual(exceptedIsSet, actual.IsSet);
+            CollectionAssert.AreEqual(exceptedPossibilities, actual.PossibleValues);
         }
     }
 }

@@ -19,13 +19,16 @@ namespace SudokuSolver.BL
             IsDone = false;
         }
 
-        private void ClearPossibilities(int value)
+        public void ClearPossibilities(int value)
         {
             foreach(var field in Fields.Where(f => !f.IsSet))
             {
                 field.RemovePossibility(value);
                 if (field.IsSet)
+                {
+                    ValueToSet.Remove(field.Value);
                     ClearPossibilities(field.Value);
+                }
             }
         }
 
@@ -46,17 +49,39 @@ namespace SudokuSolver.BL
                 IsDone = true;
         }
 
-        public void InsertValue(int index, int value)
+        public bool InsertValue(int index, int value)
         {
+            bool result;
             if (index >= 0 && index < Fields.Count)
             {
-                if (Fields[index].SetValue(value))
+                result = Fields[index].SetValue(value);
+                if (result)
                 {
                     ClearPossibilities(value);
                     ValueToSet.Remove(value);
                 }
                 if (ValueToSet.Count == 0)
                     IsDone = true;
+            }
+            else
+            {
+                result = false;
+            }
+            return result;
+        }
+
+        public void RemovePossibility(int index, int item)
+        {
+            Fields[index].RemovePossibility(item);
+            if (Fields[index].IsSet)
+                ClearPossibilities(Fields[index].Value);
+        }
+
+        public void RemovePossibility(int index, List<int> items)
+        {
+            foreach (var item in items)
+            {
+                RemovePossibility(index, item);
             }
         }
 

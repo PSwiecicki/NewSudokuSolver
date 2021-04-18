@@ -80,5 +80,34 @@ namespace SudokuSolver.BLTests
 
             Assert.AreEqual(expected, actual.ToString());
         }
+
+        [TestMethod]
+        public void RemoveWrongPossibiliti()
+        {
+            var actual = new FieldsContainer();
+            for (int i = 0; i < 9; i++)
+                actual.Fields.Add(new Field());
+            var expected = new List<int>() { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+
+            actual.ClearPossibilities(400);
+
+            CollectionAssert.AreEqual(expected, actual.Fields[4].PossibleValues);
+        }
+
+        [TestMethod]
+        public void SetFieldsByRemoveOptionalities()
+        {
+            var actual = new FieldsContainer();
+            for (int i = 0; i < 9; i++)
+                actual.Fields.Add(new Field());
+            
+            actual.RemovePossibility(2, new List<int>() { 4, 5, 6, 7, 8, 9 });
+            actual.RemovePossibility(1, new List<int>() { 3, 4, 5, 6, 7, 8, 9 });
+            actual.RemovePossibility(0, new List<int>() { 2, 3, 4, 5, 6, 7, 8, 9 });
+
+            Assert.AreEqual(1, actual.Fields[0].Value);
+            Assert.AreEqual(2, actual.Fields[1].Value);
+            Assert.AreEqual(3, actual.Fields[2].Value);
+        }
     }
 }
