@@ -60,7 +60,6 @@ namespace SudokuSolver.BL
                 {
                     for(int j = 0; j < 9; j++)
                     {
-                        var field = rows[i].Fields[j];
                         rows[i].InsertValue(j, dataTable[i, j]);
                     }
                 }

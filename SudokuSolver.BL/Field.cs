@@ -20,12 +20,12 @@ namespace SudokuSolver.BL
             }
             private set
             {
-                if (value == 0)
+                if (value == 0 && PossibleValues != null)
                 {
                     this.value = 0;
                     IsSet = false;
                 }
-                else if(value >= 1 && value <= 9 && PossibleValues.Contains(value))
+                else if(value >= 1 && value <= 9 && PossibleValues.Contains(value) && this.value == 0)
                 {
                     this.value = value;
                     PossibleValues = null;
@@ -42,8 +42,8 @@ namespace SudokuSolver.BL
         public Field(int value = 0)
         {
             PossibleValues = new List<int>() { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
-            SetValue(value);
             ContainersWithThatField = new List<FieldsContainer>();
+            SetValue(value);
         }
 
         public bool RemovePossibility(int item)

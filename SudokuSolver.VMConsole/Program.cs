@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SudokuSolver.BL;
+using System;
 
 namespace SudokuSolver.VMConsole
 {
@@ -6,7 +7,7 @@ namespace SudokuSolver.VMConsole
     {
         static void Main(string[] args)
         {
-            
+
         }
     }
 }

@@ -10,13 +10,21 @@ namespace SudokuSolver.BL
     {
         public List<Field> Fields { get; set; }
         public List<int> ValueToSet { get; private set; }
-        public bool IsDone { get; private set; }
+        public bool IsDone
+        {
+            get
+            {
+                bool result = true;
+                foreach (var field in Fields)
+                    result &= field.IsSet;
+                return result;
+            }
+        }
 
         public FieldsContainer()
         {
             Fields = new List<Field>(9);
             ValueToSet = new List<int>() { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
-            IsDone = false;
         }
 
         public void ClearPossibilities(int value)
@@ -45,8 +53,6 @@ namespace SudokuSolver.BL
                     ValueToSet.Remove(field.Value);   
                 }
             }
-            if(ValueToSet.Count == 0)
-                IsDone = true;
         }
 
         public bool InsertValue(int index, int value)
@@ -60,8 +66,6 @@ namespace SudokuSolver.BL
                     ClearPossibilities(value);
                     ValueToSet.Remove(value);
                 }
-                if (ValueToSet.Count == 0)
-                    IsDone = true;
             }
             else
             {
