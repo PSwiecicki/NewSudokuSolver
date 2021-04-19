@@ -8,6 +8,7 @@ namespace SudokuSolver.BL
 {
     public class Field
     {
+        public List<FieldsContainer> ContainersWithThatField { get; set; }
         private int value;
         public List<int> PossibleValues { get; private set; }
         public bool IsSet { get; private set; }
@@ -19,7 +20,6 @@ namespace SudokuSolver.BL
             }
             private set
             {
-                PossibleValues = new List<int>() { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
                 if (value == 0)
                 {
                     this.value = 0;
@@ -41,7 +41,9 @@ namespace SudokuSolver.BL
 
         public Field(int value = 0)
         {
+            PossibleValues = new List<int>() { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
             SetValue(value);
+            ContainersWithThatField = new List<FieldsContainer>();
         }
 
         public bool RemovePossibility(int item)
@@ -78,6 +80,8 @@ namespace SudokuSolver.BL
             try
             {
                 Value = value;
+                foreach (var container in ContainersWithThatField)
+                    container.ClearPossibilities(value);
             }
             catch
             {

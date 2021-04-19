@@ -6,9 +6,9 @@ namespace SudokuSolver.BL
 {
     public class Sudoku
     {
-        private List<FieldsContainer> rows;
-        private List<FieldsContainer> columns;
-        private List<FieldsContainer> squares;
+        private readonly List<FieldsContainer> rows;
+        private readonly List<FieldsContainer> columns;
+        private readonly List<FieldsContainer> squares;
 
         public bool IsDone 
         {
@@ -41,13 +41,14 @@ namespace SudokuSolver.BL
             {
                 for (int j = 0; j < 9; j++)
                 {
-                    Field pole = new Field();
+                    Field field = new ();
 
                     int squareIndex = (i / 3) * 3 + j / 3;
 
-                    rows[i].Fields.Add(pole);
-                    columns[j].Fields.Add(pole);
-                    squares[squareIndex].Fields.Add(pole);
+                    rows[i].Fields.Add(field);
+                    columns[j].Fields.Add(field);
+                    squares[squareIndex].Fields.Add(field);
+                    field = field.AddContainer(rows[i]).AddContainer(columns[j]).AddContainer(squares[squareIndex]);
                 }
             }
         }
@@ -59,7 +60,8 @@ namespace SudokuSolver.BL
                 {
                     for(int j = 0; j < 9; j++)
                     {
-                        //rows[i].Fields[j].Value = dataTable[i, j];
+                        var field = rows[i].Fields[j];
+                        rows[i].InsertValue(j, dataTable[i, j]);
                     }
                 }
         }
@@ -208,6 +210,16 @@ namespace SudokuSolver.BL
             foreach(var row in rows)
             {
                 result += row.ToString() + "\n+-+-+-+-+-+-+-+-+-+\n";
+            }
+            return result;
+        }
+
+        public string ToExtendedString()
+        {
+            string result = "+-+-+-+-+-+-+-+-+-+\n";
+            foreach (var row in rows)
+            {
+                result += row.ToExtendedString() + "\n+-+-+-+-+-+-+-+-+-+\n";
             }
             return result;
         }

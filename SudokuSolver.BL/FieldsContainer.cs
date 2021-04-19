@@ -89,7 +89,29 @@ namespace SudokuSolver.BL
         {
             string result = "|";
             foreach (var field in Fields)
+            {
+                
                 result += field.Value + "|";
+                
+            }
+            return result;
+        }
+
+        public string ToExtendedString()
+        {
+            string result = "|";
+            foreach (var field in Fields)
+            {
+                if (field.IsSet)
+                    result += field.Value + "|";
+                else
+                {
+                    if(field.PossibleValues != null)
+                        foreach (var p in field.PossibleValues)
+                            result += p + ",";
+                    result += "|";
+                }
+            }
             return result;
         }
     }
