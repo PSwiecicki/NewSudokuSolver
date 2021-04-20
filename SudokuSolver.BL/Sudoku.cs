@@ -10,6 +10,13 @@ namespace SudokuSolver.BL
         private readonly List<FieldsContainer> columns;
         private readonly List<FieldsContainer> squares;
 
+        public IEnumerable<FieldsContainer> Containers {
+            get
+            {
+                return rows.Concat(columns).Concat(squares);
+            }
+        }
+
         public bool IsDone 
         {
             get
@@ -65,28 +72,10 @@ namespace SudokuSolver.BL
                 }
         }
 
+
         //Algorithms
 
-        //If one field can be set to special value, this method set that value.
-        private void OneValueInContainer()
-        {
-            foreach (var container in rows.Concat(squares).Concat(columns).Where(x => !x.IsDone))
-            {
-                OneValueInContainer(container);
-            }
-        }
-
-        public void OneValueInContainer(FieldsContainer fieldsContainer)
-        {
-            foreach (var value in fieldsContainer.ValueToSet)
-            {
-                var fieldsWithValue = fieldsContainer.Fields.Where(x => x.PossibleValues.Contains(value)).ToList();
-                if (fieldsWithValue.Count == 1)
-                {
-                    //fieldsWithValue[0].Value = value;
-                }
-            }
-        }
+        
         
         //If one of possibilities is in 2 or 3 fields of one row and that fields are in the same square, then other fields in that square can't have that possibiliti value.
         //Same with column
