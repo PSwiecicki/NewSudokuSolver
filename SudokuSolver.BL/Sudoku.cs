@@ -10,6 +10,11 @@ namespace SudokuSolver.BL
         private readonly List<FieldsContainer> columns;
         private readonly List<FieldsContainer> squares;
 
+
+        public List<FieldsContainer> Rows { get; }
+        public List<FieldsContainer> Columns { get; }
+        public List<FieldsContainer> Squares { get; }
+
         public IEnumerable<FieldsContainer> Containers {
             get
             {
@@ -27,7 +32,6 @@ namespace SudokuSolver.BL
                 return result;
             }
         }
-        
 
         public Sudoku()
         {
@@ -72,117 +76,6 @@ namespace SudokuSolver.BL
                 }
         }
 
-
-        //Algorithms
-
-        
-        
-        //If one of possibilities is in 2 or 3 fields of one row and that fields are in the same square, then other fields in that square can't have that possibiliti value.
-        //Same with column
-
-        private void SamePossibilities()
-        {
-            foreach(var container in rows.Concat(columns).Where(x => !x.IsDone))
-            {
-                SamePossibilitiesInRow(container);
-            }
-            foreach(var container in squares.Where(x => !x.IsDone))
-            {
-                SamePossibilitiesInSquare(container);
-            }
-        }
-
-        public void SamePossibilitiesInRow(FieldsContainer fieldsContainer)
-        {
-            foreach (var value in fieldsContainer.ValueToSet)
-            {
-                var fieldsWithValue = fieldsContainer.Fields.Where(x => x.PossibleValues.Contains(value)).ToList();
-                if (fieldsWithValue.Count == 2 || fieldsWithValue.Count == 3)
-                {
-                    int firstFieldSquareIndex = -1;
-                    foreach(var square in squares)
-                    {
-                        if (square.Fields.Contains(fieldsWithValue[0]))
-                        {
-                            firstFieldSquareIndex = squares.IndexOf(square);
-                            break;
-                        }
-                    }
-                    bool areAllValueInSquare = true;
-                    foreach(var field in fieldsWithValue)
-                    {
-                        if(!squares[firstFieldSquareIndex].Fields.Contains(field))
-                        {
-                            areAllValueInSquare = false;
-                            break;
-                        }
-                    }
-                    if(areAllValueInSquare)
-                    {
-                        foreach(var field in squares[firstFieldSquareIndex].Fields.Where(x => !x.IsSet))
-                        {
-                            if (!fieldsWithValue.Contains(field))
-                                field.PossibleValues.Remove(value);
-                        }
-                    }
-                }
-            }
-        }
-
-        public void SamePossibilitiesInSquare(FieldsContainer fieldsContainer)
-        {
-            foreach (var value in fieldsContainer.ValueToSet)
-            {
-                var fieldsWithValue = fieldsContainer.Fields.Where(x => x.PossibleValues.Contains(value)).ToList();
-                if (fieldsWithValue.Count == 2 || fieldsWithValue.Count == 3)
-                {
-                    int firstFieldRowIndex = -1;
-                    int firstFieldColumnIndex = -1;
-                    foreach (var row in rows)
-                    {
-                        if (row.Fields.Contains(fieldsWithValue[0]))
-                        {
-                            firstFieldRowIndex = rows.IndexOf(row);
-                            break;
-                        }
-                    }
-                    foreach (var column in columns)
-                    {
-                        if (column.Fields.Contains(fieldsWithValue[0]))
-                        {
-                            firstFieldColumnIndex = columns.IndexOf(column);
-                            break;
-                        }
-                    }
-                    bool areAllValueInRow = true;
-                    bool areAllValueInColumn = true;
-                    foreach (var field in fieldsWithValue)
-                    {
-                        if (!rows[firstFieldRowIndex].Fields.Contains(field))
-                            areAllValueInRow = false;
-                        if (!columns[firstFieldColumnIndex].Fields.Contains(field))
-                            areAllValueInColumn = false;
-                    }
-                    if (areAllValueInRow)
-                    {
-                        foreach (var field in rows[firstFieldRowIndex].Fields.Where(x => !x.IsSet))
-                        {
-                            if (!fieldsWithValue.Contains(field))
-                                field.PossibleValues.Remove(value);
-                        }
-                    }
-                    if (areAllValueInColumn)
-                    {
-                        foreach (var field in columns[firstFieldColumnIndex].Fields.Where(x => !x.IsSet))
-                        {
-                            if (!fieldsWithValue.Contains(field))
-                                field.PossibleValues.Remove(value);
-                        }
-                    }
-                }
-            }
-        }
-
         public void ClearAllPossibilities()
         {
             foreach (var container in rows.Concat(columns).Concat(squares).Where(x => !x.IsDone))
@@ -191,11 +84,10 @@ namespace SudokuSolver.BL
             }
         }
 
-        
         public override string ToString()
         {
             string result = "+-+-+-+-+-+-+-+-+-+\n";
-            foreach(var row in rows)
+            foreach (var row in rows)
             {
                 result += row.ToString() + "\n+-+-+-+-+-+-+-+-+-+\n";
             }
