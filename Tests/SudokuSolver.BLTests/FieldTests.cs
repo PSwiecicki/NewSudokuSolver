@@ -107,7 +107,7 @@ namespace SudokuSolver.BLTests
             var actual = new Field();
             var exceptedValue = 0;
             var exceptedIsSet = false;
-            List<int> exceptedPossibilities = new List<int>() { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+            List<int> exceptedPossibilities = new () { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
 
             Assert.IsFalse(actual.SetValue(123123));
 

@@ -59,7 +59,7 @@ namespace SudokuSolver.BL
                     rows[i].Fields.Add(field);
                     columns[j].Fields.Add(field);
                     squares[squareIndex].Fields.Add(field);
-                    field = field.AddContainer(rows[i]).AddContainer(columns[j]).AddContainer(squares[squareIndex]);
+                    field.AddContainer(rows[i]).AddContainer(columns[j]).AddContainer(squares[squareIndex]);
                 }
             }
         }
