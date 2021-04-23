@@ -11,9 +11,24 @@ namespace SudokuSolver.BL
         private readonly List<FieldsContainer> squares;
 
 
-        public List<FieldsContainer> Rows { get; }
-        public List<FieldsContainer> Columns { get; }
-        public List<FieldsContainer> Squares { get; }
+        public List<FieldsContainer> Rows { 
+            get
+            { 
+                return rows;
+            } 
+        }
+        public List<FieldsContainer> Columns {
+            get
+            {
+                return columns;
+            } 
+        }
+        public List<FieldsContainer> Squares {
+            get
+            {
+                return squares;
+            }
+        }
 
         public IEnumerable<FieldsContainer> Containers {
             get
@@ -102,6 +117,16 @@ namespace SudokuSolver.BL
                 result += row.ToExtendedString() + "\n+-+-+-+-+-+-+-+-+-+\n";
             }
             return result;
+        }
+
+        public void Solve()
+        {
+            this.UniquePossibilityInContainer();
+            if (IsDone)
+                return;
+            this.SamePossibilities();
+            if (IsDone)
+                return;
         }
     }
 }

@@ -8,13 +8,14 @@ namespace SudokuSolver.BL
 {
     public static class SudokuAlhorithms
     {
-        public static void OnePossibleValueInContainer(this Sudoku sudoku)
+        //If only one field have possible special value
+        public static void UniquePossibilityInContainer(this Sudoku sudoku)
         {
-            foreach (var container in sudoku.Containers)
+            foreach (var container in sudoku.Containers.Where(c => !c.IsDone))
             {
                 foreach (var value in container.ValueToSet)
                 {
-                    var fieldsWithValue = container.Fields.Where(x => x.PossibleValues.Contains(value)).ToList();
+                    var fieldsWithValue = container.Fields.Where(x => !x.IsSet && x.PossibleValues.Contains(value)).ToList();
                     if (fieldsWithValue.Count == 1)
                     {
                         fieldsWithValue[0].SetValue(value);
@@ -31,7 +32,7 @@ namespace SudokuSolver.BL
             {
                 foreach (var value in container.ValueToSet)
                 {
-                    var fieldsWithValue = container.Fields.Where(x => x.PossibleValues.Contains(value)).ToList();
+                    var fieldsWithValue = container.Fields.Where(x => !x.IsSet && x.PossibleValues.Contains(value)).ToList();
                     if(fieldsWithValue.Count == 2 || fieldsWithValue.Count == 3)
                     {
                         var firstFieldSquare = sudoku.Squares.Where(s => s.Fields.Contains(fieldsWithValue[0])).ToList()[0];
@@ -60,7 +61,7 @@ namespace SudokuSolver.BL
             {
                 foreach (var value in container.ValueToSet)
                 {
-                    var fieldsWithValue = container.Fields.Where(x => x.PossibleValues.Contains(value)).ToList();
+                    var fieldsWithValue = container.Fields.Where(x => !x.IsSet && x.PossibleValues.Contains(value)).ToList();
                     if (fieldsWithValue.Count == 2 || fieldsWithValue.Count == 3)
                     {
                         var firstFieldRow = sudoku.Rows.Where(r => r.Fields.Contains(fieldsWithValue[0])).ToList()[0];
@@ -96,8 +97,36 @@ namespace SudokuSolver.BL
                     }
                 }
             }
-
         }
-            
+
+        public static void SamePossibilitiesInFewFields(this Sudoku sudoku)
+        {
+            foreach (var container in sudoku.Containers.Where(c => !c.IsDone))
+            {
+                foreach (var fieldToCheck in container.Fields.Where(f => !f.IsSet))
+                {
+                    List<Field> compatibleFields = new();
+                    foreach (var possibleField in container.Fields.Where(f => !f.IsSet))
+                    {
+                        if (ContainsAllItems(fieldToCheck.PossibleValues, possibleField.PossibleValues))
+                            compatibleFields.Add(possibleField);
+                    }
+                    if (compatibleFields.Count == fieldToCheck.PossibleValues.Count)
+                    {
+                        foreach (var field in container.Fields.Where(f => !compatibleFields.Contains(f)))
+                            field.RemovePossibility(fieldToCheck.PossibleValues);
+                    }
+                }
+            }
+        }
+
+        private static bool ContainsAllItems<T>(List<T> first, List<T>second)
+        {
+            foreach (var item in second)
+                if (!first.Contains(item))
+                    return false;
+            return true;
+        }
+
     }
 }

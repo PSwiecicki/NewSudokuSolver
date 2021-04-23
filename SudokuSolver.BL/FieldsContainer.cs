@@ -106,15 +106,7 @@ namespace SudokuSolver.BL
             string result = "|";
             foreach (var field in Fields)
             {
-                if (field.IsSet)
-                    result += field.Value + "|";
-                else
-                {
-                    if(field.PossibleValues != null)
-                        foreach (var p in field.PossibleValues)
-                            result += p + ",";
-                    result += "|";
-                }
+                result = result.ToString();
             }
             return result;
         }

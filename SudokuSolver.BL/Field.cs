@@ -89,5 +89,19 @@ namespace SudokuSolver.BL
             }
             return result;
         }
+
+        public override string ToString()
+        {
+            string result = "";
+            if (IsSet)
+                result += Value;
+            else
+            {
+                foreach (var possibility in PossibleValues)
+                    result += possibility + ", ";
+                result = result.Remove(result.Length - 2, 2);
+            }
+            return result;
+        }
     }
 }

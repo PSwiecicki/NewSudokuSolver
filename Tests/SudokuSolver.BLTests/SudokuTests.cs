@@ -196,6 +196,7 @@ namespace SudokuSolver.BLTests
                            "\n+-+-+-+-+-+-+-+-+-+\n";
 
             actual.InsertData(table);
+            actual.Solve();
 
             System.Console.WriteLine(expected);
             System.Console.WriteLine(actual.ToString());
