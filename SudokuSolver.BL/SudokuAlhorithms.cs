@@ -105,6 +105,7 @@ namespace SudokuSolver.BL
             {
                 foreach (var fieldToCheck in container.Fields.Where(f => !f.IsSet))
                 {
+                    var fielfToCheckValues = fieldToCheck.PossibleValues;
                     List<Field> compatibleFields = new();
                     foreach (var possibleField in container.Fields.Where(f => !f.IsSet))
                     {
@@ -113,8 +114,11 @@ namespace SudokuSolver.BL
                     }
                     if (compatibleFields.Count == fieldToCheck.PossibleValues.Count)
                     {
-                        foreach (var field in container.Fields.Where(f => !compatibleFields.Contains(f)))
-                            field.RemovePossibility(fieldToCheck.PossibleValues);
+                        foreach (var field in container.Fields.Where(f => !f.IsSet && !compatibleFields.Contains(f)))
+                        {
+                            if(!fieldToCheck.IsSet)
+                                field.RemovePossibility(field.PossibleValues.Intersect(fieldToCheck.PossibleValues).ToList());
+                        }
                     }
                 }
             }

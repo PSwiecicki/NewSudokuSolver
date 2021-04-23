@@ -124,6 +124,9 @@ namespace SudokuSolver.BL
             this.UniquePossibilityInContainer();
             if (IsDone)
                 return;
+            this.SamePossibilitiesInFewFields();
+            if (IsDone)
+                return;
             this.SamePossibilities();
             if (IsDone)
                 return;

@@ -106,7 +106,7 @@ namespace SudokuSolver.BL
             string result = "|";
             foreach (var field in Fields)
             {
-                result = result.ToString();
+                result += field.ToString() + "|";
             }
             return result;
         }
