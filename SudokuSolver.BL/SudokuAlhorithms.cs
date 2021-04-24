@@ -131,6 +131,5 @@ namespace SudokuSolver.BL
                     return false;
             return true;
         }
-
     }
 }

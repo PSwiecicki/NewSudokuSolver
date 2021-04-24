@@ -79,6 +79,23 @@ namespace SudokuSolver.BL
             }
         }
 
+        public Sudoku Clone()
+        {
+            var clone = new Sudoku();
+            for(int i = 0; i < clone.Rows.Count; i++)
+            {
+                for (int j = 0; j < clone.Rows[i].Fields.Count; j++)
+                    if (Rows[i].Fields[j].IsSet)
+                        clone.Rows[i].InsertValue(j, Rows[i].Fields[j].Value);
+                    else
+                    {
+                        var itemsToRemove = clone.Rows[i].Fields[j].PossibleValues.Except(Rows[i].Fields[j].PossibleValues).ToList();
+                        clone.Rows[i].RemovePossibility(j, itemsToRemove);
+                    }
+            }
+            return clone;
+        }
+
         public void InsertData(int[,] dataTable)
         {
             if(dataTable.Length == 81)
@@ -121,13 +138,14 @@ namespace SudokuSolver.BL
 
         public void Solve()
         {
+            Sudoku sudokuBefore = this.Clone();
             this.UniquePossibilityInContainer();
             if (IsDone)
                 return;
-            this.SamePossibilitiesInFewFields();
+            this.SamePossibilities();
             if (IsDone)
                 return;
-            this.SamePossibilities();
+            this.SamePossibilitiesInFewFields();
             if (IsDone)
                 return;
         }
