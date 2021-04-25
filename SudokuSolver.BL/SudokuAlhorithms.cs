@@ -13,7 +13,7 @@ namespace SudokuSolver.BL
         {
             foreach (var container in sudoku.Containers.Where(c => !c.IsDone))
             {
-                foreach (var value in container.ValueToSet)
+                foreach (var value in container.ValueToSet.ToList())
                 {
                     var fieldsWithValue = container.Fields.Where(x => !x.IsSet && x.PossibleValues.Contains(value)).ToList();
                     if (fieldsWithValue.Count == 1)
@@ -30,7 +30,7 @@ namespace SudokuSolver.BL
             //For columns and rows
             foreach(var container in sudoku.Rows.Concat(sudoku.Columns))
             {
-                foreach (var value in container.ValueToSet)
+                foreach (var value in container.ValueToSet.ToList())
                 {
                     var fieldsWithValue = container.Fields.Where(x => !x.IsSet && x.PossibleValues.Contains(value)).ToList();
                     if(fieldsWithValue.Count == 2 || fieldsWithValue.Count == 3)
@@ -39,7 +39,7 @@ namespace SudokuSolver.BL
                         bool areAllValueInSquare = true;
                         foreach (var field in fieldsWithValue)
                         {
-                            if (!firstFieldSquare.Fields.Contains(field))
+                            if (firstFieldSquare != field.ContainersWithThatField[2])
                             {
                                 areAllValueInSquare = false;
                                 break;
@@ -50,7 +50,7 @@ namespace SudokuSolver.BL
                             foreach (var field in firstFieldSquare.Fields.Where(x => !x.IsSet))
                             {
                                 if (!fieldsWithValue.Contains(field))
-                                    field.PossibleValues.Remove(value);
+                                    field.RemovePossibility(value);
                             }
                         }
                     }
@@ -70,9 +70,9 @@ namespace SudokuSolver.BL
                         bool areAllValueInColumn = true;
                         foreach (var field in fieldsWithValue)
                         {
-                            if (!firstFieldRow.Fields.Contains(field))
+                            if (firstFieldRow != field.ContainersWithThatField[0])
                                 areAllValueInRow = false;
-                            if (!firstFieldColumn.Fields.Contains(field))
+                            if (firstFieldColumn != field.ContainersWithThatField[1])
                                 areAllValueInColumn = false;
                             if (!(areAllValueInRow || areAllValueInColumn))
                                 break;
@@ -122,6 +122,42 @@ namespace SudokuSolver.BL
                     }
                 }
             }
+        }
+
+        public static void ValueSubstitution(this Sudoku sudoku)
+        {
+            int fieldIndexRow = -1, fieldIndexColumn = -1;
+            for (int i = 2; i < 9; i ++)
+            {
+                foreach (var row in sudoku.Rows)
+                {
+                    foreach (var field in row.Fields.Where(f => !f.IsSet))
+                    {
+                        if (field.PossibleValues.Count == i)
+                        {
+                            fieldIndexRow = sudoku.Rows.IndexOf(field.ContainersWithThatField[0]);
+                            fieldIndexColumn = sudoku.Columns.IndexOf(field.ContainersWithThatField[1]);
+                            break;
+                        }
+                    }
+                    if (fieldIndexRow != -1)
+                        break;
+                }
+                if (fieldIndexRow != -1)
+                    break;
+            }
+            if(fieldIndexRow != -1)
+                foreach(var value in sudoku.Rows[fieldIndexRow].Fields[fieldIndexColumn].PossibleValues.ToList())
+                {
+                    var newSudoku = sudoku.Clone();
+                    newSudoku.Rows[fieldIndexRow].InsertValue(fieldIndexColumn, value);
+                    newSudoku.Solve();
+                    if (newSudoku.IsValidate && newSudoku.IsDone)
+                    {
+                        newSudoku.InsertDataTo(sudoku);
+                        break;
+                    }
+                }
         }
 
         private static bool ContainsAllItems<T>(List<T> first, List<T>second)

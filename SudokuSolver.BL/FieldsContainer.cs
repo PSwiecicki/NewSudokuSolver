@@ -21,6 +21,21 @@ namespace SudokuSolver.BL
             }
         }
 
+        public bool isValidate
+        {
+            get
+            { 
+                var valueSetted = new HashSet<int>();
+                foreach(var field in Fields.Where(f => f.IsSet))
+                {
+                    if (valueSetted.Contains(field.Value))
+                        return false;
+                    valueSetted.Add(field.Value);
+                }
+                return true;
+            }
+        }
+
         public FieldsContainer()
         {
             Fields = new List<Field>(9);
@@ -107,6 +122,32 @@ namespace SudokuSolver.BL
                 result += field.ToString() + "|";
             }
             return result;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj == null || !(obj is FieldsContainer))
+                return false;
+            else
+            {
+                var containerObj = (FieldsContainer)obj;
+                for(int i = 0; i < this.Fields.Count; i++)
+                {
+                    if (!Fields[i].Equals(containerObj.Fields[i]))
+                        return false;
+                }
+                return true;
+            }
+        }
+
+        public override int GetHashCode()
+        {
+            int hashCode = 0;
+            foreach(var field in Fields)
+            {
+                hashCode = hashCode * 10 + field.Value;
+            }
+            return hashCode;
         }
     }
 }

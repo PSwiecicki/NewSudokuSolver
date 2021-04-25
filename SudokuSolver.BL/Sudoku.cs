@@ -48,6 +48,17 @@ namespace SudokuSolver.BL
             }
         }
 
+        public bool IsValidate
+        {
+            get
+            {
+                bool result = true;
+                foreach (var row in rows)
+                    result &= row.isValidate;
+                return result;
+            }
+        }
+
         public Sudoku()
         {
             rows = new List<FieldsContainer>();
@@ -79,21 +90,60 @@ namespace SudokuSolver.BL
             }
         }
 
+        private Sudoku (Sudoku toCopy)
+        {
+            rows = new List<FieldsContainer>();
+            columns = new List<FieldsContainer>();
+            squares = new List<FieldsContainer>();
+
+            for (int i = 0; i < 9; i++)
+            {
+                rows.Add(new FieldsContainer());
+                columns.Add(new FieldsContainer());
+                squares.Add(new FieldsContainer());
+            }
+
+            for (int i = 0; i < rows.Count; i++)
+            {
+                for (int j = 0; j < columns.Count; j++)
+                {
+                    Field field;
+                    if (toCopy.Rows[i].Fields[j].IsSet)
+                        field = new Field(toCopy.Rows[i].Fields[j].Value);
+                    else
+                        field = new Field(toCopy.Rows[i].Fields[j].PossibleValues);
+                    
+                    int squareIndex = (i / 3) * 3 + j / 3;
+
+                    rows[i].Fields.Add(field);
+                    columns[j].Fields.Add(field);
+                    squares[squareIndex].Fields.Add(field);
+                    field.AddContainer(rows[i]).AddContainer(columns[j]).AddContainer(squares[squareIndex]);
+                }
+            }
+        }
+
         public Sudoku Clone()
         {
-            var clone = new Sudoku();
-            for(int i = 0; i < clone.Rows.Count; i++)
+            return new Sudoku(this);
+        }
+
+        public void InsertDataTo(Sudoku clone)
+        {
+            for (int i = 0; i < clone.Rows.Count; i++)
             {
                 for (int j = 0; j < clone.Rows[i].Fields.Count; j++)
                     if (Rows[i].Fields[j].IsSet)
                         clone.Rows[i].InsertValue(j, Rows[i].Fields[j].Value);
                     else
                     {
-                        var itemsToRemove = clone.Rows[i].Fields[j].PossibleValues.Except(Rows[i].Fields[j].PossibleValues).ToList();
-                        clone.Rows[i].RemovePossibility(j, itemsToRemove);
+                        if (!clone.Rows[i].Fields[j].IsSet)
+                        {
+                            var itemsToRemove = clone.Rows[i].Fields[j].PossibleValues.Except(Rows[i].Fields[j].PossibleValues).ToList();
+                            clone.Rows[i].RemovePossibility(j, itemsToRemove);
+                        }
                     }
             }
-            return clone;
         }
 
         public void InsertData(int[,] dataTable)
@@ -116,6 +166,34 @@ namespace SudokuSolver.BL
             }
         }
 
+        public void Solve()
+        {
+            Sudoku sudokuBefore;
+            do
+            {
+                do
+                {
+                    do
+                    {
+                        sudokuBefore = this.Clone();
+                        this.UniquePossibilityInContainer();
+                        if (IsDone || !IsValidate || sudokuBefore.IsDone || !sudokuBefore.IsValidate) //Need to fix it becouse clone isn't a clone
+                            return;
+                    }
+                    while (!this.Equals(sudokuBefore));
+                    this.SamePossibilities();
+                    if (IsDone || !IsValidate)
+                        return;
+                }
+                while (!this.Equals(sudokuBefore));
+                this.SamePossibilitiesInFewFields();
+                if (IsDone || !IsValidate)
+                    return;
+            }
+            while (!this.Equals(sudokuBefore));
+            this.ValueSubstitution();
+        }
+
         public override string ToString()
         {
             string result = "+-+-+-+-+-+-+-+-+-+\n";
@@ -136,18 +214,30 @@ namespace SudokuSolver.BL
             return result;
         }
 
-        public void Solve()
+        public override bool Equals(object obj)
         {
-            Sudoku sudokuBefore = this.Clone();
-            this.UniquePossibilityInContainer();
-            if (IsDone)
-                return;
-            this.SamePossibilities();
-            if (IsDone)
-                return;
-            this.SamePossibilitiesInFewFields();
-            if (IsDone)
-                return;
+            if (obj == null || !(obj is Sudoku))
+                return false;
+            else
+            {
+                var sudokuObj = (Sudoku)obj;
+                for(int i = 0; i < Rows.Count; i++)
+                {
+                    if (!Rows[i].Equals(sudokuObj.Rows[i]))
+                        return false;
+                }
+                return true;
+            }
+        }
+
+        public override int GetHashCode()
+        {
+            int hashCode = 0;
+            foreach(var row in Rows)
+            {
+                hashCode += row.GetHashCode();
+            }
+            return hashCode;
         }
     }
 }

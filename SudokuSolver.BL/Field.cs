@@ -25,11 +25,16 @@ namespace SudokuSolver.BL
                     this.value = 0;
                     IsSet = false;
                 }
-                else if(value >= 1 && value <= 9 && PossibleValues.Contains(value) && this.value == 0)
+                else if(value >= 1 && value <= 9 && PossibleValues != null && PossibleValues.Contains(value) && this.value == 0)
                 {
                     this.value = value;
                     PossibleValues = null;
                     IsSet = true;
+                    foreach (var container in ContainersWithThatField)
+                    {
+                        container.ValueToSet.Remove(Value);
+                        container.ClearPossibilities(Value);
+                    }
                 }
                 else
                 {
@@ -45,6 +50,15 @@ namespace SudokuSolver.BL
             ContainersWithThatField = new List<FieldsContainer>();
             SetValue(value);
         }
+        public Field(List<int> possibleValues)
+        {
+            PossibleValues = new List<int>();
+            foreach (var possibiity in possibleValues)
+                PossibleValues.Add(possibiity);
+            ContainersWithThatField = new List<FieldsContainer>();
+            SetValue(0);
+        }
+
 
         public bool RemovePossibility(int item)
         {
@@ -80,8 +94,6 @@ namespace SudokuSolver.BL
             try
             {
                 Value = value;
-                foreach (var container in ContainersWithThatField)
-                    container.ClearPossibilities(value);
             }
             catch
             {
@@ -102,6 +114,43 @@ namespace SudokuSolver.BL
                 result = result.Remove(result.Length - 2, 2);
             }
             return result;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj == null || !(obj is Field))
+                return false;
+            else
+            {
+                var fieldObj = (Field)obj;
+                if (Value != 0)
+                    return Value.Equals(fieldObj.Value);
+                else if (fieldObj.Value != 0)
+                    return false;
+                else if (PossibleValues.Count != fieldObj.PossibleValues.Count)
+                {
+                    return false;
+                }
+                else
+                {
+                    for (int i = 0; i < PossibleValues.Count; i++)
+                        if (PossibleValues[i] != fieldObj.PossibleValues[i])
+                            return false;
+                    return true;
+                }
+
+            }
+        }
+
+        public override int GetHashCode()
+        {
+            int hashCode = 0;
+            if (IsSet)
+                hashCode = Value;
+            else
+                foreach (var possibility in PossibleValues)
+                    hashCode = hashCode * 10 + possibility;
+            return hashCode;
         }
     }
 }
