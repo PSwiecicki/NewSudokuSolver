@@ -1,0 +1,6 @@
+-zrobić NewCommand();
+-zrobić InsertCommand();
+-zrobić ChangeCommand();
+-zrobić SolveCommand();
+-zrobić HelpCommand();
+-zoptymalizować kod w BL

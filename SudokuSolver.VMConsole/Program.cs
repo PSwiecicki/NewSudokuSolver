@@ -8,14 +8,15 @@ namespace SudokuSolver.VMConsole
     {
         static void Main(string[] args)
         {
-            Sudoku sudoku = new Sudoku();
-
-            InsertData(sudoku);
-
-            sudoku.Solve();
-
-            Console.WriteLine(sudoku.ToString());
+            Console.WriteLine("Welcome to SudokuSolver!");
             
+            UserInterface.CommandLoop();
+
+            Console.WriteLine("Thanks for using SudokuSolver and have a nice day!");
+            Console.Read();
+
+
+
         }
 
         static void InsertData(Sudoku sudoku)
