@@ -1,4 +1,3 @@
--zrobić NewCommand();
 -zrobić InsertCommand();
 -zrobić ChangeCommand();
 -zrobić SolveCommand();

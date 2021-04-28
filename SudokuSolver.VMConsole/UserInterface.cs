@@ -1,10 +1,12 @@
-﻿using System;
+﻿using SudokuSolver.BL;
+using System;
 
 namespace SudokuSolver.VMConsole
 {
     public static class UserInterface
     {
         private static bool Quit = false;
+        private static Sudoku sudoku = null;
 
         public static void CommandLoop()
         {
@@ -32,8 +34,52 @@ namespace SudokuSolver.VMConsole
             else if(command.StartsWith("quit"))
                 Quit = true;
             else
-                Console.WriteLine($"{command} wasn't recognized, please try again or write help to see availble commands.");
+                Console.WriteLine($"{command} wasn't recognized, please try again or write \"help\" to see availble commands.");
             
+        }
+
+        private static void NewCommand()
+        {
+            if (sudoku != null)
+            {
+                Console.WriteLine("You already have created sudoku. Do you want to erase it and create a new one?");
+                if (YesNoLoop())
+                {
+                    CreateNewSudoku();
+                }
+                else
+                {
+                    Console.WriteLine("New sudoku wasn't created.");
+                }
+            }
+            else
+            {
+                CreateNewSudoku();
+            }
+        }
+
+        private static void CreateNewSudoku()
+        {
+            sudoku = new Sudoku();
+            Console.WriteLine("Your sudoku has been created.");
+        }
+
+        private static bool YesNoLoop()
+        {
+            bool? result = null;
+            while(!result.HasValue)
+            {
+                string answer = Console.ReadLine().ToLower();
+                if (answer == "yes")
+                    result = true;
+                else if (answer == "no")
+                    result = false;
+                else
+                {
+                    Console.WriteLine($"Can't recognize \"{answer}\" command. Try again with \"yes\" or \"no\".");
+                }
+            }
+            return result.Value;
         }
 
         private static void changeCommand(string command)
@@ -51,10 +97,6 @@ namespace SudokuSolver.VMConsole
             Console.WriteLine("Solve command");
         }
 
-        private static void NewCommand()
-        {
-            Console.WriteLine("New command");
-        }
 
         private static void HelpCommand()
         {
