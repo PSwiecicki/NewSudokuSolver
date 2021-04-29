@@ -6,7 +6,6 @@ namespace SudokuSolver.VMConsole
     public static class UserInterface
     {
         private static bool Quit = false;
-        private static Sudoku sudoku = null;
 
         public static void CommandLoop()
         {
@@ -28,7 +27,7 @@ namespace SudokuSolver.VMConsole
             else if (command.StartsWith("insert"))
                 InsertCommand();
             else if (command.StartsWith("change"))
-                changeCommand(command);
+                ChangeCommand(command);
             else if(command.StartsWith("solve"))
                 SolveCommand();
             else if(command.StartsWith("quit"))
@@ -40,7 +39,7 @@ namespace SudokuSolver.VMConsole
 
         private static void NewCommand()
         {
-            if (sudoku != null)
+            if (SudokuOperations.SudokuInstance != null)
             {
                 Console.WriteLine("You already have created sudoku. Do you want to erase it and create a new one?");
                 if (YesNoLoop())
@@ -60,7 +59,7 @@ namespace SudokuSolver.VMConsole
 
         private static void CreateNewSudoku()
         {
-            sudoku = new Sudoku();
+            SudokuOperations.SudokuInstance = new Sudoku();
             Console.WriteLine("Your sudoku has been created.");
         }
 
@@ -81,15 +80,15 @@ namespace SudokuSolver.VMConsole
             }
             return result.Value;
         }
-
-        private static void changeCommand(string command)
-        {
-            Console.WriteLine("Change command");
-        }
-
         private static void InsertCommand()
         {
-            Console.WriteLine("Insert command");
+            SudokuOperations.GetData();
+        }
+
+
+        private static void ChangeCommand(string command)
+        {
+            Console.WriteLine("Change command");
         }
 
         private static void SolveCommand()

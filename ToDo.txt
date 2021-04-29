@@ -1,4 +1,5 @@
--zrobić InsertCommand();
+-podzielić klasę SudokuOperations
+-dodać kolejkę dla wiadomości, które się wyswietlą po wyczyszczeniu konsoli, pod sudoku
 -zrobić ChangeCommand();
 -zrobić SolveCommand();
 -zrobić HelpCommand();
