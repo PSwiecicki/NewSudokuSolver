@@ -93,7 +93,8 @@ namespace SudokuSolver.VMConsole
 
         private static void SolveCommand()
         {
-            Console.WriteLine("Solve command");
+            SudokuOperations.SudokuInstance.Solve();
+            SudokuOperations.ShowData();
         }
 
 
