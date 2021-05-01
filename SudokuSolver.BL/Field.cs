@@ -20,12 +20,12 @@ namespace SudokuSolver.BL
             }
             private set
             {
-                if (value == 0 && PossibleValues != null)
+                if (value == 0 && !IsSet)
                 {
                     this.value = 0;
                     IsSet = false;
                 }
-                else if(value >= 1 && value <= 9 && PossibleValues != null && PossibleValues.Contains(value) && this.value == 0)
+                else if(value >= 1 && value <= 9 && !IsSet && PossibleValues.Contains(value))
                 {
                     this.value = value;
                     PossibleValues = null;
@@ -35,10 +35,6 @@ namespace SudokuSolver.BL
                         container.ValueToSet.Remove(Value);
                         container.ClearPossibilities(Value);
                     }
-                }
-                else
-                {
-                    throw new ArgumentOutOfRangeException(paramName: nameof(value), message: "Argument value should be between 1 to 9.");
                 }
             }
 
@@ -50,25 +46,22 @@ namespace SudokuSolver.BL
             ContainersWithThatField = new List<FieldsContainer>();
             SetValue(value);
         }
-        public Field(List<int> possibleValues)
+        public Field(List<int> possibleValues) : this(0)
         {
-            PossibleValues = new List<int>();
-            foreach (var possibiity in possibleValues)
-                PossibleValues.Add(possibiity);
-            ContainersWithThatField = new List<FieldsContainer>();
-            SetValue(0);
+            var itemsToRemove = PossibleValues.Except(possibleValues).ToList();
+            RemovePossibility(itemsToRemove);
         }
 
 
         public bool RemovePossibility(int item)
         {
             bool result;
-            if(PossibleValues != null)
+            if(!IsSet)
             {
                 result = PossibleValues.Remove(item);
                 if (PossibleValues.Count == 1)
                 {
-                    SetValue(PossibleValues[0]);
+                    Value = PossibleValues.First();
                 }
             }
             else
@@ -90,56 +83,47 @@ namespace SudokuSolver.BL
 
         public bool SetValue(int value)
         {
-            bool result = true;
-            try
-            {
-                Value = value;
-            }
-            catch
-            {
-                result = false;
-            }
-            return result;
+            Value = value;
+            if (Value == value)
+                return true;
+            else
+                return false;
         }
 
         public override string ToString()
         {
-            string result = "";
             if (IsSet)
-                result += Value;
+                return Value.ToString();
             else
             {
+                string result = "";
                 foreach (var possibility in PossibleValues)
                     result += possibility + ", ";
                 result = result.Remove(result.Length - 2, 2);
+                return result;
             }
-            return result;
         }
 
         public override bool Equals(object obj)
         {
-            if (obj == null || !(obj is Field))
+            if (obj == null || obj is not Field field)
                 return false;
             else
             {
-                var fieldObj = (Field)obj;
                 if (Value != 0)
-                    return Value.Equals(fieldObj.Value);
-                else if (fieldObj.Value != 0)
+                    return Value.Equals(field.Value);
+                else if (field.Value != 0)
                     return false;
-                else if (PossibleValues.Count != fieldObj.PossibleValues.Count)
-                {
+                else if (PossibleValues.Count != field.PossibleValues.Count)
                     return false;
-                }
                 else
                 {
                     for (int i = 0; i < PossibleValues.Count; i++)
-                        if (PossibleValues[i] != fieldObj.PossibleValues[i])
+                        if (PossibleValues[i] != field.PossibleValues[i])
                             return false;
-                    return true;
                 }
-
             }
+            return true;
         }
 
         public override int GetHashCode()
