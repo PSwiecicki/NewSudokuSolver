@@ -14,7 +14,6 @@ namespace SudokuSolver.VMConsole
 
         public static void ShowData()
         {
-            Console.Clear();
             string result = "┌───┬───┬───┐\n";
             for(int i = 0; i < 9; i++)
             {
@@ -28,16 +27,14 @@ namespace SudokuSolver.VMConsole
                         result += ".";
                     else
                         result += Data[i, j];
-                }
-                result += "│\n";
+                }                result += "│\n";
             }
             result += "└───┴───┴───┘";
-            Console.WriteLine(result);
+            UserInterface.Messages.Enqueue(result);
         }
 
         public static void ShowData(int indexI, int indexJ)
         {
-            Console.Clear();
             string result = "┌───┬───┬───┐\n";
             for (int i = 0; i < 9; i++)
             {
@@ -57,16 +54,18 @@ namespace SudokuSolver.VMConsole
                 result += "│\n";
             }
             result += "└───┴───┴───┘";
-            Console.WriteLine(result);
+            UserInterface.Messages.Enqueue(result);
         }
 
         public static void GetData()
         {
-            for(int i = 0; i < 9; i++)
+            ShowData(0,0);
+            for (int i = 0; i < 9; i++)
             {
                 for(int j = 0; j < 9; j++)
                 {
-                    ShowData(i, j);
+                    UserInterface.Messages.Enqueue("Insert value");
+                    UserInterface.ShowMessages();
                     var dataGetter = Console.ReadLine();
                     if(int.TryParse(dataGetter, out int num))
                     {
@@ -74,11 +73,47 @@ namespace SudokuSolver.VMConsole
                         if (!IsDataValid(i, j))
                         {
                             Data[i, j] = 0;
+                            ShowData(i, j);
+                            UserInterface.Messages.Enqueue($"{num} is incorrect now.");
                             j--;
                         }
+                        else if (0 > num || num > 9)
+                        {
+                            ShowData(i, j);
+                            UserInterface.Messages.Enqueue($"{num} is wrong value.");
+                            j--;
+                        }
+                        else
+                        {
+                            ShowNextData(i, j);
+                        }
+                    }
+                    else if(dataGetter.Length != 0)
+                    {
+                        ShowData(i, j);
+                        UserInterface.Messages.Enqueue($"{dataGetter} is wrong value.");
+                        j--;
+                    }
+                    else
+                    {
+
+                        ShowNextData(i, j);
                     }
                 }
             }
+        }
+
+        private static void ShowNextData(int i, int j)
+        {
+            int nextJ = j + 1;
+            int nextI = i;
+            if (nextJ == 9)
+            {
+                nextJ = 0;
+                nextI++;
+            }
+            if (nextI != 9)
+                ShowData(nextI, nextJ);
         }
 
         private static bool IsDataValid(int indexI, int indexJ)

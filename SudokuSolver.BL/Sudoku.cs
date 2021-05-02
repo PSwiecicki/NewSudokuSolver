@@ -58,7 +58,7 @@ namespace SudokuSolver.BL
             }
         }
 
-        private bool error;
+        private readonly bool error;
         public Sudoku()
         {
             rows = new List<FieldsContainer>();

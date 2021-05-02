@@ -1,17 +1,22 @@
 ﻿using SudokuSolver.BL;
 using System;
+using System.Collections.Generic;
 
 namespace SudokuSolver.VMConsole
 {
     public static class UserInterface
     {
         private static bool Quit = false;
+        private static Queue<string> messages = new ();
+
+        public static Queue<string> Messages { get => messages; set => messages = value; }
 
         public static void CommandLoop()
         {
             while(!Quit)
             {
-                Console.WriteLine("\nWhat would you like to do?");
+                Messages.Enqueue("What would you like to do?");
+                ShowMessages();
                 var command = Console.ReadLine().ToLower();
                 ComandRoute(command);
             }
@@ -33,22 +38,22 @@ namespace SudokuSolver.VMConsole
             else if(command.StartsWith("quit"))
                 Quit = true;
             else
-                Console.WriteLine($"{command} wasn't recognized, please try again or write \"help\" to see availble commands.");
-            
+                Messages.Enqueue($"{command} wasn't recognized, please try again or write \"help\" to see availble commands.");    
         }
 
         private static void NewCommand()
         {
+            ShowMessages();
             if (SudokuOperations.SudokuInstance != null)
             {
-                Console.WriteLine("You already have created sudoku. Do you want to erase it and create a new one?");
+                Messages.Enqueue("You already have created sudoku. Do you want to erase it and create a new one?");
                 if (YesNoLoop())
                 {
                     CreateNewSudoku();
                 }
                 else
                 {
-                    Console.WriteLine("New sudoku wasn't created.");
+                    Messages.Enqueue("New sudoku wasn't created.");
                 }
             }
             else
@@ -60,7 +65,8 @@ namespace SudokuSolver.VMConsole
         private static void CreateNewSudoku()
         {
             SudokuOperations.SudokuInstance = new Sudoku();
-            Console.WriteLine("Your sudoku has been created.");
+            SudokuOperations.Data = new int[9, 9];
+            Messages.Enqueue("Your sudoku has been created.");
         }
 
         private static bool YesNoLoop()
@@ -68,6 +74,7 @@ namespace SudokuSolver.VMConsole
             bool? result = null;
             while(!result.HasValue)
             {
+                ShowMessages();
                 string answer = Console.ReadLine().ToLower();
                 if (answer == "yes")
                     result = true;
@@ -75,7 +82,8 @@ namespace SudokuSolver.VMConsole
                     result = false;
                 else
                 {
-                    Console.WriteLine($"Can't recognize \"{answer}\" command. Try again with \"yes\" or \"no\".");
+                    Messages.Enqueue($"Can't recognize \"{answer}\" command. Try again with \"yes\" or \"no\".");
+                    Messages.Enqueue("Do you want to erase your sudoku and create a new one?");
                 }
             }
             return result.Value;
@@ -102,5 +110,15 @@ namespace SudokuSolver.VMConsole
         {
             Console.WriteLine("Help command");
         }
+
+
+        public static void ShowMessages()
+        {
+            Console.Clear();
+            while (Messages.Count != 0)
+                Console.WriteLine(Messages.Dequeue());
+        }
+
+
     }
 }
