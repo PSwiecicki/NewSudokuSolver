@@ -152,7 +152,7 @@ namespace SudokuSolver.BL
                     var newSudoku = sudoku.Clone();
                     newSudoku.Rows[fieldIndexRow].InsertValue(fieldIndexColumn, value);
                     newSudoku.Solve();
-                    if (newSudoku.IsValidate && newSudoku.IsDone)
+                    if (newSudoku.IsValid && newSudoku.IsDone)
                     {
                         newSudoku.InsertDataTo(sudoku);
                         break;
