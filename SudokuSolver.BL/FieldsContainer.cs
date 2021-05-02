@@ -14,25 +14,24 @@ namespace SudokuSolver.BL
         {
             get
             {
-                bool result = true;
                 foreach (var field in Fields)
-                    result &= field.IsSet;
-                return result;
+                    if (!field.IsSet)
+                        return false;
+                return true;
             }
         }
 
-        public bool isValidate
+        public bool IsValid
         {
             get
             { 
                 var valueSetted = new HashSet<int>();
-                foreach(var field in Fields.Where(f => f.IsSet))
+                var settedFields = Fields.Where(f => f.IsSet).ToList();
+                foreach(var field in settedFields)
                 {
-                    if (valueSetted.Contains(field.Value))
-                        return false;
                     valueSetted.Add(field.Value);
                 }
-                return true;
+                return valueSetted.Count == settedFields.Count;
             }
         }
 
@@ -44,56 +43,25 @@ namespace SudokuSolver.BL
 
         public void ClearPossibilities(int value)
         {
-            foreach(var field in Fields.Where(f => !f.IsSet))
+            foreach(var field in Fields.Where(f => !f.IsSet).ToList())
             {
                 field.RemovePossibility(value);
-                if (field.IsSet)
-                {
-                    ValueToSet.Remove(field.Value);
-                    ClearPossibilities(field.Value);
-                }
             }
         }
 
-        public void ClearPossibilities()
-        {
-            //Remove all value which are set
-            ValueToSet.RemoveAll(v => Fields.Where(f => f.IsSet).Select(f => f.Value).Contains(v));
-            foreach(var field in Fields.Where(x => !x.IsSet))
-            {
-                var valueToRemove = field.PossibleValues.Except(ValueToSet).ToList();
-                field.RemovePossibility(valueToRemove);
-                if(field.IsSet)
-                {
-                    ValueToSet.Remove(field.Value);   
-                }
-            }
-        }
-
-        public bool InsertValue(int index, int value)
+        public bool InsertValue(int fieldIndex, int value)
         {
             bool result;
-            if (index >= 0 && index < Fields.Count)
-            {
-                result = Fields[index].SetValue(value);
-                if (result)
-                {
-                    ClearPossibilities(value);
-                    ValueToSet.Remove(value);
-                }
-            }
+            if (0 <= fieldIndex && fieldIndex < Fields.Count)
+                result = Fields[fieldIndex].SetValue(value);
             else
-            {
-                result = false;
-            }
+                return false;
             return result;
         }
 
         public void RemovePossibility(int index, int item)
         {
             Fields[index].RemovePossibility(item);
-            if (Fields[index].IsSet)
-                ClearPossibilities(Fields[index].Value);
         }
 
         public void RemovePossibility(int index, List<int> items)
@@ -126,14 +94,13 @@ namespace SudokuSolver.BL
 
         public override bool Equals(object obj)
         {
-            if (obj == null || !(obj is FieldsContainer))
+            if (obj == null || (obj is not FieldsContainer container))
                 return false;
             else
             {
-                var containerObj = (FieldsContainer)obj;
                 for(int i = 0; i < this.Fields.Count; i++)
                 {
-                    if (!Fields[i].Equals(containerObj.Fields[i]))
+                    if (!Fields[i].Equals(container.Fields[i]))
                         return false;
                 }
                 return true;
@@ -143,9 +110,9 @@ namespace SudokuSolver.BL
         public override int GetHashCode()
         {
             int hashCode = 0;
-            foreach(var field in Fields)
+            for(int i = 0; i < Fields.Count; i++)
             {
-                hashCode = hashCode * 10 + field.Value;
+                hashCode = hashCode * i + Fields[i].GetHashCode();
             }
             return hashCode;
         }

@@ -54,7 +54,7 @@ namespace SudokuSolver.BL
             {
                 bool result = true;
                 foreach (var row in rows)
-                    result &= row.isValidate;
+                    result &= row.IsValid;
                 return result;
             }
         }
