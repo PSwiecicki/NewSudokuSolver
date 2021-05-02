@@ -17,7 +17,7 @@ namespace SudokuSolver.VMConsole
             string result = "┌───┬───┬───┐\n";
             for(int i = 0; i < 9; i++)
             {
-                if (i % 3 == 0)
+                if (i % 3 == 0 && i != 0)
                     result += "├───┼───┼───┤\n";
                 for(int j = 0; j < 9; j++)
                 {
@@ -96,7 +96,6 @@ namespace SudokuSolver.VMConsole
                     }
                     else
                     {
-
                         ShowNextData(i, j);
                     }
                 }
@@ -197,7 +196,22 @@ namespace SudokuSolver.VMConsole
             }
         }
 
-        internal static void ChangeField(int row, int column)
+        public static void Solve()
+        {
+            SudokuInstance.InsertData(Data);
+            SudokuInstance.Solve();
+            for(int row = 0; row < 9; row++)
+            {
+                for(int column = 0; column < 9; column++)
+                {
+                    Data[row, column] = SudokuInstance.Rows[row].Fields[column].Value;
+                }
+            }
+            ShowData();
+            UserInterface.Messages.Enqueue("Sudoku solved!");
+        }
+
+        public static void ChangeField(int row, int column)
         {
             bool wasSet = false;
             ShowData(row, column);

@@ -187,8 +187,7 @@ namespace SudokuSolver.VMConsole
 
         private static void SolveCommand()
         {
-            SudokuOperations.SudokuInstance.Solve();
-            SudokuOperations.ShowData();
+            SudokuOperations.Solve();
         }
 
 
