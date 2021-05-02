@@ -64,7 +64,7 @@ namespace SudokuSolver.VMConsole
             {
                 for(int j = 0; j < 9; j++)
                 {
-                    UserInterface.Messages.Enqueue("Insert value");
+                    UserInterface.Messages.Enqueue("Insert value:");
                     UserInterface.ShowMessages();
                     var dataGetter = Console.ReadLine();
                     if(int.TryParse(dataGetter, out int num))
@@ -152,5 +152,133 @@ namespace SudokuSolver.VMConsole
             }
             return true;
         }
+
+        public static void ChangeRow(int row)
+        {
+            ShowData(row, 0);
+            for(int column = 0; column < 9; column++)
+            {
+                UserInterface.Messages.Enqueue("Insert value:");
+                UserInterface.ShowMessages();
+                var dataGetter = Console.ReadLine();
+                if (int.TryParse(dataGetter, out int num))
+                {
+                    Data[row, column] = (1 <= num && num <= 9) ? num : 0;
+                    if (!IsDataValid(row, column))
+                    {
+                        Data[row, column] = 0;
+                        ShowData(row, column);
+                        UserInterface.Messages.Enqueue($"{num} is incorrect now.");
+                        column--;
+                    }
+                    else if (0 > num || num > 9)
+                    {
+                        ShowData(row, column);
+                        UserInterface.Messages.Enqueue($"{num} is wrong value.");
+                        column--;
+                    }
+                    else
+                    {
+                        if(column != 8)
+                            ShowNextData(row, column);
+                    }
+                }
+                else if (dataGetter.Length != 0)
+                {
+                    ShowData(row, column);
+                    UserInterface.Messages.Enqueue($"{dataGetter} is wrong value.");
+                    column--;
+                }
+                else
+                {
+                    if(column != 8)
+                        ShowNextData(row, column);
+                }
+            }
+        }
+
+        internal static void ChangeField(int row, int column)
+        {
+            bool wasSet = false;
+            ShowData(row, column);
+            do
+            {
+                UserInterface.Messages.Enqueue("Insert value:");
+                UserInterface.ShowMessages();
+                var dataGetter = Console.ReadLine();
+                if (int.TryParse(dataGetter, out int num))
+                {
+                    Data[row, column] = (1 <= num && num <= 9) ? num : 0;
+                    if (!IsDataValid(row, column))
+                    {
+                        Data[row, column] = 0;
+                        ShowData(row, column);
+                        UserInterface.Messages.Enqueue($"{num} is incorrect now.");
+
+                    }
+                    else if (0 > num || num > 9)
+                    {
+                        ShowData(row, column);
+                        UserInterface.Messages.Enqueue($"{num} is wrong value.");
+                    }
+                    else
+                        wasSet = true;
+                }
+                else if (dataGetter.Length != 0)
+                {
+                    ShowData(row, column);
+                    UserInterface.Messages.Enqueue($"{dataGetter} is wrong value.");
+                }
+                else
+                    wasSet = true;
+            }
+            while (!wasSet);
+            
+        }
+
+        public static void ChangeColumn(int column)
+        {
+            ShowData(0, column);
+            for (int row = 0; row < 9; row++)
+            {
+                UserInterface.Messages.Enqueue("Insert value:");
+                UserInterface.ShowMessages();
+                var dataGetter = Console.ReadLine();
+                if (int.TryParse(dataGetter, out int num))
+                {
+                    Data[row, column] = (1 <= num && num <= 9) ? num : 0;
+                    if (!IsDataValid(row, column))
+                    {
+                        Data[row, column] = 0;
+                        ShowData(row, column);
+                        UserInterface.Messages.Enqueue($"{num} is incorrect now.");
+                        column--;
+                    }
+                    else if (0 > num || num > 9)
+                    {
+                        ShowData(row, column);
+                        UserInterface.Messages.Enqueue($"{num} is wrong value.");
+                        column--;
+                    }
+                    else
+                    {
+                        if (row != 8)
+                            ShowData(row + 1, column);
+                    }
+                }
+                else if (dataGetter.Length != 0)
+                {
+                    ShowData(row, column);
+                    UserInterface.Messages.Enqueue($"{dataGetter} is wrong value.");
+                    column--;
+                }
+                else
+                {
+                    if (row != 8)
+                        ShowData(row + 1, column);
+                }
+            }
+        }
+
     }
 }

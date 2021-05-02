@@ -96,7 +96,93 @@ namespace SudokuSolver.VMConsole
 
         private static void ChangeCommand(string command)
         {
-            Console.WriteLine("Change command");
+            var commandParts = command.Split();
+
+            if (commandParts.Length >= 2)
+            {
+                if (commandParts[1] == "row")
+                {
+                    ChangeRow();
+                }
+                else if (commandParts[1] == "column")
+                {
+                    ChangeColumn();
+                }
+                else if (commandParts[1] == "field")
+                {
+                    ChangeField();
+                }
+                else
+                {
+                    messages.Enqueue($"You should use \"field\", \"column\" or \"row\" instead of {commandParts[1]}.");
+                }
+            }
+            else
+            {
+                messages.Enqueue("You need to specify what do you want to change - row, column or field.");
+            }
+        }
+
+        private static void ChangeRow()
+        {
+            messages.Enqueue("Which row do you want change?");
+            ShowMessages();
+            var valueGetter = Console.ReadLine();
+            if (int.TryParse(valueGetter, out int row))
+            {
+                if (1 <= row && row <= 9)
+                    SudokuOperations.ChangeRow(row-1);
+                else
+                    messages.Enqueue("Wrong value. You should chose value from 1 to 9.");
+            }
+            else
+                messages.Enqueue("That wasn't value.");
+        }
+
+        private static void ChangeColumn()
+        {
+            messages.Enqueue("Which column do you want change?");
+            ShowMessages();
+            var valueGetter = Console.ReadLine();
+            if (int.TryParse(valueGetter, out int column))
+            {
+                if (1 <= column && column <= 9)
+                    SudokuOperations.ChangeColumn(column-1);
+                else
+                    messages.Enqueue("Wrong value. You should chose value from 1 to 9.");
+            }
+            else
+                messages.Enqueue("That wasn't value.");
+        }
+
+        private static void ChangeField()
+        {
+            messages.Enqueue("Which field do you want change?");
+            messages.Enqueue("Insert row index.");
+            ShowMessages();
+            var valueGetter = Console.ReadLine();
+            if (int.TryParse(valueGetter, out int row))
+            {
+                if (1 <= row && row <= 9)
+                {
+                    messages.Enqueue("Insert column index.");
+                    ShowMessages();
+                    valueGetter = Console.ReadLine();
+                    if (int.TryParse(valueGetter, out int column))
+                    {
+                        if (1 <= column && column <= 9)
+                            SudokuOperations.ChangeField(row - 1, column - 1);
+                        else
+                            messages.Enqueue("Wrong value. You should chose value from 1 to 9.");
+                    }
+                    else
+                        messages.Enqueue("That wasn't value.");
+                }
+                else
+                    messages.Enqueue("Wrong value. You should chose value from 1 to 9.");
+            }
+            else
+                messages.Enqueue("That wasn't value.");
         }
 
         private static void SolveCommand()
