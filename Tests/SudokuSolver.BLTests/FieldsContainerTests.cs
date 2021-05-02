@@ -28,7 +28,7 @@ namespace SudokuSolver.BLTests
         {
             var actual = new FieldsContainer();
             for (int i = 0; i < 9; i++)
-                actual.Fields.Add(new Field());
+                new Field().AddContainer(actual);
             var expected = new List<int>() { 1, 2, 4, 5, 7, 8, 9 };
 
             actual.InsertValue(0, 3);
@@ -99,7 +99,7 @@ namespace SudokuSolver.BLTests
         {
             var actual = new FieldsContainer();
             for (int i = 0; i < 9; i++)
-                actual.Fields.Add(new Field());
+                new Field().AddContainer(actual);
             
             actual.RemovePossibility(2, new List<int>() { 4, 5, 6, 7, 8, 9 });
             actual.RemovePossibility(1, new List<int>() { 3, 4, 5, 6, 7, 8, 9 });

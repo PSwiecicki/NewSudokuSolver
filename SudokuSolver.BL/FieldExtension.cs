@@ -6,11 +6,12 @@ using System.Threading.Tasks;
 
 namespace SudokuSolver.BL
 {
-    static class FieldExtension
+    public static class FieldExtension
     {
         public static Field AddContainer(this Field field, FieldsContainer container)
         {
             field.ContainersWithThatField.Add(container);
+            container.Fields.Add(field);
             return field;
         }
     }

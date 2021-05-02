@@ -74,9 +74,9 @@ namespace SudokuSolver.BL
         public bool RemovePossibility(List<int> items)
         {
             bool result = false;
-            foreach(var item in items)
+            for(int i = 0; i < items.Count; i++)
             {
-                result |= RemovePossibility(item);
+                result |= RemovePossibility(items[i]);
             }
             return result;
         }

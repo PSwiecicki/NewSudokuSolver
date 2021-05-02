@@ -35,11 +35,11 @@ namespace SudokuSolver.BL
                     var fieldsWithValue = container.Fields.Where(x => !x.IsSet && x.PossibleValues.Contains(value)).ToList();
                     if(fieldsWithValue.Count == 2 || fieldsWithValue.Count == 3)
                     {
-                        var firstFieldSquare = sudoku.Squares.Where(s => s.Fields.Contains(fieldsWithValue[0])).ToList()[0];
+                        var detectedSquare = sudoku.Squares.Where(s => s.Fields.Contains(fieldsWithValue[0])).First();
                         bool areAllValueInSquare = true;
                         foreach (var field in fieldsWithValue)
                         {
-                            if (firstFieldSquare != field.ContainersWithThatField[2])
+                            if (detectedSquare != field.ContainersWithThatField[2]) // In ContainersWithThatField: 0 - row, 1 - column, 2 - square
                             {
                                 areAllValueInSquare = false;
                                 break;
@@ -47,7 +47,7 @@ namespace SudokuSolver.BL
                         }
                         if (areAllValueInSquare)
                         {
-                            foreach (var field in firstFieldSquare.Fields.Where(x => !x.IsSet))
+                            foreach (var field in detectedSquare.Fields.Where(x => !x.IsSet).ToList())
                             {
                                 if (!fieldsWithValue.Contains(field))
                                     field.RemovePossibility(value);
@@ -59,20 +59,20 @@ namespace SudokuSolver.BL
             //For squares
             foreach (var container in sudoku.Squares)
             {
-                foreach (var value in container.ValueToSet)
+                foreach (var value in container.ValueToSet.ToList())
                 {
                     var fieldsWithValue = container.Fields.Where(x => !x.IsSet && x.PossibleValues.Contains(value)).ToList();
                     if (fieldsWithValue.Count == 2 || fieldsWithValue.Count == 3)
                     {
-                        var firstFieldRow = sudoku.Rows.Where(r => r.Fields.Contains(fieldsWithValue[0])).ToList()[0];
-                        var firstFieldColumn = sudoku.Columns.Where(c => c.Fields.Contains(fieldsWithValue[0])).ToList()[0];
+                        var detectedRow = sudoku.Rows.Where(r => r.Fields.Contains(fieldsWithValue[0])).First();
+                        var detectedColumn = sudoku.Columns.Where(c => c.Fields.Contains(fieldsWithValue[0])).First();
                         bool areAllValueInRow = true;
                         bool areAllValueInColumn = true;
                         foreach (var field in fieldsWithValue)
                         {
-                            if (firstFieldRow != field.ContainersWithThatField[0])
+                            if (detectedRow != field.ContainersWithThatField[0]) // In ContainersWithThatField: 0 - row, 1 - column, 2 - square
                                 areAllValueInRow = false;
-                            if (firstFieldColumn != field.ContainersWithThatField[1])
+                            if (detectedColumn != field.ContainersWithThatField[1]) // In ContainersWithThatField: 0 - row, 1 - column, 2 - square
                                 areAllValueInColumn = false;
                             if (!(areAllValueInRow || areAllValueInColumn))
                                 break;
@@ -80,18 +80,18 @@ namespace SudokuSolver.BL
                         }
                         if (areAllValueInRow)
                         {
-                            foreach (var field in firstFieldRow.Fields.Where(x => !x.IsSet))
+                            foreach (var field in detectedRow.Fields.Where(x => !x.IsSet).ToList())
                             {
                                 if (!fieldsWithValue.Contains(field))
-                                    field.PossibleValues.Remove(value);
+                                    field.RemovePossibility(value);
                             }
                         }
                         if (areAllValueInColumn)
                         {
-                            foreach (var field in firstFieldColumn.Fields.Where(x => !x.IsSet))
+                            foreach (var field in detectedColumn.Fields.Where(x => !x.IsSet).ToList())
                             {
                                 if (!fieldsWithValue.Contains(field))
-                                    field.PossibleValues.Remove(value);
+                                    field.RemovePossibility(value);
                             }
                         }
                     }
@@ -101,23 +101,25 @@ namespace SudokuSolver.BL
 
         public static void SamePossibilitiesInFewFields(this Sudoku sudoku)
         {
-            foreach (var container in sudoku.Containers.Where(c => !c.IsDone))
+            foreach (var container in sudoku.Containers.Where(c => !c.IsDone).ToList())
             {
-                foreach (var fieldToCheck in container.Fields.Where(f => !f.IsSet))
+                foreach (var fieldToCheck in container.Fields.Where(f => !f.IsSet).ToList())
                 {
-                    var fielfToCheckValues = fieldToCheck.PossibleValues;
-                    List<Field> compatibleFields = new();
-                    foreach (var possibleField in container.Fields.Where(f => !f.IsSet))
+                    if (!fieldToCheck.IsSet)
                     {
-                        if (ContainsAllItems(fieldToCheck.PossibleValues, possibleField.PossibleValues))
-                            compatibleFields.Add(possibleField);
-                    }
-                    if (compatibleFields.Count == fieldToCheck.PossibleValues.Count)
-                    {
-                        foreach (var field in container.Fields.Where(f => !f.IsSet && !compatibleFields.Contains(f)))
+                        var detectedValues = fieldToCheck.PossibleValues;
+                        List<Field> compatibleFields = new();
+                        foreach (var possibleField in container.Fields.Where(f => !f.IsSet))
                         {
-                            if(!fieldToCheck.IsSet)
-                                field.RemovePossibility(field.PossibleValues.Intersect(fieldToCheck.PossibleValues).ToList());
+                            if (ContainsAllItems(detectedValues, possibleField.PossibleValues))
+                                compatibleFields.Add(possibleField);
+                        }
+                        if (compatibleFields.Count == detectedValues.Count)
+                        {
+                            foreach (var field in container.Fields.Where(f => !f.IsSet && !compatibleFields.Contains(f)).ToList())
+                            {
+                                field.RemovePossibility(detectedValues);
+                            }
                         }
                     }
                 }
@@ -154,7 +156,7 @@ namespace SudokuSolver.BL
                     newSudoku.Solve();
                     if (newSudoku.IsValid && newSudoku.IsDone)
                     {
-                        newSudoku.InsertDataTo(sudoku);
+                        sudoku.InsertData(newSudoku);
                         break;
                     }
                 }

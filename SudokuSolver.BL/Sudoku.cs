@@ -54,15 +54,17 @@ namespace SudokuSolver.BL
                 foreach (var row in rows)
                     if (!row.IsValid)
                         return false;
-                return true;
+                return true && error;
             }
         }
 
+        private bool error;
         public Sudoku()
         {
             rows = new List<FieldsContainer>();
             columns = new List<FieldsContainer>();
             squares = new List<FieldsContainer>();
+            error = true;
 
             for(int i = 0; i<9;i++)
             {
@@ -88,15 +90,16 @@ namespace SudokuSolver.BL
 
         private Sudoku (Sudoku toCopy) : this()
         {
-            for (int rowIndex = 0; rowIndex < rows.Count; rowIndex++)
+            for (int rowIndex = 0; rowIndex < rows.Count && error; rowIndex++)
             {
-                for (int columnIndex = 0; columnIndex < columns.Count; columnIndex++)
+                for (int columnIndex = 0; columnIndex < columns.Count && error; columnIndex++)
                 {
+                    
                     var currentFieldToCopy = toCopy.Rows[rowIndex].Fields[columnIndex];
                     var currentField = Rows[rowIndex].Fields[columnIndex];
 
                     if (currentFieldToCopy.IsSet)
-                        currentField.SetValue(currentFieldToCopy.Value);
+                        error = currentField.SetValue(currentFieldToCopy.Value);
                     else
                     {
                         var itemsToRemove = currentField.PossibleValues.Except(currentFieldToCopy.PossibleValues).ToList();
@@ -118,9 +121,20 @@ namespace SudokuSolver.BL
                 {
                     for(int columnIndex = 0; columnIndex < 9; columnIndex++)
                     {
-                        rows[rowIndex].InsertValue(columnIndex, dataTable[rowIndex, columnIndex]);
+                        Rows[rowIndex].InsertValue(columnIndex, dataTable[rowIndex, columnIndex]);
                     }
                 }
+        }
+
+        public void InsertData(Sudoku sudoku)
+        { 
+            for (int rowIndex = 0; rowIndex < 9; rowIndex++)
+            {
+                for (int columnIndex = 0; columnIndex < 9; columnIndex++)
+                {
+                    Rows[rowIndex].InsertValue(columnIndex, sudoku.Rows[rowIndex].Fields[columnIndex].Value);
+                }
+            }
         }
 
         public void Solve()
