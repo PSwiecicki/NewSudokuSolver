@@ -31,5 +31,10 @@ namespace SudokuSolver.VMWPF
             Regex regex = new Regex("[^0-9]+");
             e.Handled = regex.IsMatch(e.Text);
         }
+
+        private void solve_button_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }
