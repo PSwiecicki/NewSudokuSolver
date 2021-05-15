@@ -1,6 +1,10 @@
--podzielić klasę SudokuOperations
--dodać kolejkę dla wiadomości, które się wyswietlą po wyczyszczeniu konsoli, pod sudoku
--zrobić ChangeCommand();
--zrobić SolveCommand();
--zrobić HelpCommand();
--zoptymalizować kod w BL
+Konsola:
+- Podzielić klasę SudokuOperations
+- Zrobić HelpCommand();
+
+
+WPF:
+- Zrobić weryfikację czy pola nie kolidują
+- Zrobić podświetlanie kolidujących pól
+- Napisać funkcjonalność dla przycisku Solve
+
