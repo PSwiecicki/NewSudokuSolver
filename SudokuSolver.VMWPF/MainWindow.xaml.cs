@@ -45,21 +45,34 @@ namespace SudokuSolver.VMWPF
 
         private void FieldPreviewTextInput(object sender, TextCompositionEventArgs e)
         {
+            ClearBackgrounds();
             Regex regex = new Regex("[^1-9]+");
-            e.Handled = regex.IsMatch(e.Text);
             var field = sender as TextBox;
             var indexes = GetTexboxIndexes(field);
-            var conflictedFields = GetConflictFields(indexes[0], indexes[1]);
+            var conflictedFields = GetConflictFields(indexes[0], indexes[1], e.Text);
             if(conflictedFields.Count > 0)
             {
                 foreach(var conflictedField in conflictedFields)
                 {
                     conflictedField.Background = Brushes.LightCoral;
                 }
+                e.Handled = true;
+            }
+            else
+            {
+                e.Handled = regex.IsMatch(e.Text);
             }
         }
 
-        private List<TextBox> GetConflictFields(int row, int column)
+        private void ClearBackgrounds()
+        {
+            foreach(var field in FieldsTextboxes)
+            {
+                field.Background = Brushes.Transparent;
+            }
+        }
+
+        private List<TextBox> GetConflictFields(int row, int column, string text)
         {
 
             List<TextBox> textBoxes = new List<TextBox>();
@@ -67,14 +80,14 @@ namespace SudokuSolver.VMWPF
             {
                 if (i == row)
                     continue;
-                if (FieldsTextboxes[i, column].Text == FieldsTextboxes[row, column].Text)
+                if (FieldsTextboxes[i, column].Text == text)
                     textBoxes.Add(FieldsTextboxes[i, column]);
             }
             for (int j = 0; j < 9; j++)
             {
                 if (j == column)
                     continue;
-                if (FieldsTextboxes[row, j].Text == FieldsTextboxes[row, column].Text)
+                if (FieldsTextboxes[row, j].Text == text)
                     textBoxes.Add(FieldsTextboxes[row, j]);
             }
             int square = row / 3 * 3 + column / 3;
@@ -88,7 +101,7 @@ namespace SudokuSolver.VMWPF
                     int checkingJ = squareFirstFieldIndexJ + j;
                     if (checkingI == row && checkingJ == column)
                         continue;
-                    if (FieldsTextboxes[checkingI, checkingJ].Text == FieldsTextboxes[row, column].Text)
+                    if (FieldsTextboxes[checkingI, checkingJ].Text == text)
                         textBoxes.Add(FieldsTextboxes[checkingI, checkingJ]);
                 }
             }
