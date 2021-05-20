@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SudokuSolver.BL;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -48,7 +49,7 @@ namespace SudokuSolver.VMWPF
             ClearBackgrounds();
             Regex regex = new Regex("[^1-9]+");
             var field = sender as TextBox;
-            var indexes = GetTexboxIndexes(field);
+            var indexes = GetTextBoxIndexes(field);
             var conflictedFields = GetConflictFields(indexes[0], indexes[1], e.Text);
             if(conflictedFields.Count > 0)
             {
@@ -108,7 +109,7 @@ namespace SudokuSolver.VMWPF
             return textBoxes;   
         }
 
-        private int[] GetTexboxIndexes(TextBox textBox)
+        private int[] GetTextBoxIndexes(TextBox textBox)
         {
             for (int i = 0; i < 9; i++)
                 for (int j = 0; j < 9; j++)
@@ -119,7 +120,56 @@ namespace SudokuSolver.VMWPF
 
         private void solve_button_Click(object sender, RoutedEventArgs e)
         {
-             
+            int[,] dataTable = new int[9, 9];
+            for(int i = 0; i < 9; i++)
+            {
+                for(int j = 0; j < 9; j ++)
+                {
+                    dataTable[i, j] = FieldsTextboxes[i, j].Text != "" ? Convert.ToInt32(FieldsTextboxes[i, j].Text) : 0;
+                }
+            }
+            Sudoku sudoku = new Sudoku();
+            sudoku.InsertData(dataTable);
+            sudoku.Solve();
+            for (int i = 0; i < 9; i++)
+            {
+                for (int j = 0; j < 9; j++)
+                {
+                    if(FieldsTextboxes[i, j].Text == "")
+                        FieldsTextboxes[i, j].Text = sudoku.Rows[i].Fields[j].Value.ToString();
+                }
+            }
+        }
+
+        private void Field_GotFocus(object sender, RoutedEventArgs e)
+        {
+            ClearBackgrounds();
+        }
+
+        private void Field_KeyDown(object sender, KeyEventArgs e)
+        {
+            var textBox = sender as TextBox;
+            var textBoxIndexes = GetTextBoxIndexes(textBox);
+            switch (e.Key)
+            {
+                case Key.Right:
+                    textBoxIndexes[1] = (textBoxIndexes[1] + 1) % 9;
+                    break;
+                case Key.Left:
+                    textBoxIndexes[1] = textBoxIndexes[1] - 1;
+                    if (textBoxIndexes[1] < 0)
+                        textBoxIndexes[1] = 8;
+                    break;
+                case Key.Up:
+                    textBoxIndexes[0] = textBoxIndexes[0] - 1;
+                    if (textBoxIndexes[0] < 0)
+                        textBoxIndexes[0] = 8;
+                    break;
+                case Key.Down:
+                    textBoxIndexes[0] = (textBoxIndexes[0] + 1) % 9;
+                    break;
+            }
+            FieldsTextboxes[textBoxIndexes[0], textBoxIndexes[1]].Focus();
         }
     }
 }
