@@ -136,6 +136,7 @@
                  Grid.Column="6" Grid.Row="6" Grid.RowSpan="3" Grid.ColumnSpan="3"/>
         <!--#endregion-->
         <Button x:Name="solve_button" Content="Solve" Grid.Column="9" HorizontalAlignment="Center" Width="80" Margin="5,20,5,20" Grid.Row="8" VerticalAlignment="Center" Click="solve_button_Click"/>
+        <Button x:Name="new_button" Content="New" Grid.Column="9" HorizontalAlignment="Center" Width="80" Margin="5,20,5,20" Grid.Row="7" VerticalAlignment="Center" Click="new_button_Click"/>
 
     </Grid>
 </Window>

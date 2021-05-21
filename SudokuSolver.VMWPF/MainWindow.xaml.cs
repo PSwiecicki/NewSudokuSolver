@@ -171,5 +171,13 @@ namespace SudokuSolver.VMWPF
             }
             FieldsTextboxes[textBoxIndexes[0], textBoxIndexes[1]].Focus();
         }
+
+        private void new_button_Click(object sender, RoutedEventArgs e)
+        {
+            foreach(var tb in FieldsTextboxes)
+            {
+                tb.Text = "";
+            }
+        }
     }
 }
