@@ -90,36 +90,50 @@ namespace SudokuSolver.VMConsole
         }
         private static void InsertCommand()
         {
-            SudokuOperations.GetData();
+            if(SudokuOperations.Data != null)
+            {
+                SudokuOperations.GetData();
+            }
+            else
+            {
+                Messages.Enqueue("First you need to create new sudoku.");
+            }
         }
 
 
         private static void ChangeCommand(string command)
         {
-            var commandParts = command.Split();
 
-            if (commandParts.Length >= 2)
-            {
-                if (commandParts[1] == "row")
+            if (SudokuOperations.Data != null)
+            { 
+                var commandParts = command.Split();
+                if (commandParts.Length >= 2)
                 {
-                    ChangeRow();
-                }
-                else if (commandParts[1] == "column")
-                {
-                    ChangeColumn();
-                }
-                else if (commandParts[1] == "field")
-                {
-                    ChangeField();
+                    if (commandParts[1] == "row")
+                    {
+                        ChangeRow();
+                    }
+                    else if (commandParts[1] == "column")
+                    {
+                        ChangeColumn();
+                    }
+                    else if (commandParts[1] == "field")
+                    {
+                        ChangeField();
+                    }
+                    else
+                    {
+                        messages.Enqueue($"You should use \"field\", \"column\" or \"row\" instead of {commandParts[1]}.");
+                    }
                 }
                 else
                 {
-                    messages.Enqueue($"You should use \"field\", \"column\" or \"row\" instead of {commandParts[1]}.");
+                    messages.Enqueue("You need to specify what do you want to change - row, column or field.");
                 }
             }
             else
             {
-                messages.Enqueue("You need to specify what do you want to change - row, column or field.");
+                Messages.Enqueue("First you need to create new sudoku.");
             }
         }
 
