@@ -204,7 +204,7 @@ namespace SudokuSolver.VMConsole
             {
                 for(int column = 0; column < 9; column++)
                 {
-                    Data[row, column] = SudokuInstance.Rows[row].Fields[column].Value;
+                    Data[row, column] = SudokuInstance.Rows[row].Fields[column].Value.Value;
                 }
             }
             ShowData();

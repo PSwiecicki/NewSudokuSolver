@@ -60,7 +60,7 @@ namespace SudokuSolver.BLTests
             actual.RemovePossibility(new List<int>() { 1, 2, 3, 4, 5, 6, 7, 8 });
 
             Assert.AreEqual(exceptedValue, actual.Value);
-            Assert.AreEqual(exceptedIsSet, actual.IsSet);
+            Assert.AreEqual(exceptedIsSet, actual.isSet);
             CollectionAssert.AreEqual(exceptedPossibilities, actual.PossibleValues);
         }
 
@@ -76,7 +76,7 @@ namespace SudokuSolver.BLTests
             actual.RemovePossibility(3);
 
             Assert.AreEqual(exceptedValue, actual.Value);
-            Assert.AreEqual(exceptedIsSet, actual.IsSet);
+            Assert.AreEqual(exceptedIsSet, actual.isSet);
             CollectionAssert.AreEqual(exceptedPossibilities, actual.PossibleValues);
         }
 
@@ -89,7 +89,7 @@ namespace SudokuSolver.BLTests
             var exceptedPossibilities = new List<int>() { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
 
             Assert.AreEqual(exceptedValue, actual.Value);
-            Assert.AreEqual(exceptedIsSet, actual.IsSet);
+            Assert.AreEqual(exceptedIsSet, actual.isSet);
             CollectionAssert.AreEqual(exceptedPossibilities, actual.PossibleValues);
         }
 
@@ -112,7 +112,7 @@ namespace SudokuSolver.BLTests
             Assert.IsFalse(actual.SetValue(123123));
 
             Assert.AreEqual(exceptedValue, actual.Value);
-            Assert.AreEqual(exceptedIsSet, actual.IsSet);
+            Assert.AreEqual(exceptedIsSet, actual.isSet);
             CollectionAssert.AreEqual(exceptedPossibilities, actual.PossibleValues);
         }
     }

@@ -7,13 +7,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SudokuSolver.BL", "SudokuSo
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{A9E285F5-0FB5-4E0B-A99D-D970B5D108E0}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SudokuSolver.BLTests", "Tests\SudokuSolver.BLTests\SudokuSolver.BLTests.csproj", "{F13734FD-2F8D-4AB0-B0E6-3828F90E51C2}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SudokuSolver.VMConsole", "SudokuSolver.VMConsole\SudokuSolver.VMConsole.csproj", "{7AB705F9-2152-441F-B829-C856AFC0CCAD}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SudokuSolver.VMWPF", "SudokuSolver.VMWPF\SudokuSolver.VMWPF.csproj", "{75A8D93B-A51A-4277-B8B2-9F663D7ECF8A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SudokuSolver.ASP", "SudokuSolver.ASP\SudokuSolver.ASP.csproj", "{C4556E76-130E-44A3-AA66-5BCD8FE86C82}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SudokuSolver.ASP", "SudokuSolver.ASP\SudokuSolver.ASP.csproj", "{C4556E76-130E-44A3-AA66-5BCD8FE86C82}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SudokuSolver.BL.Tests", "SudokuSolver.BL.Tests\SudokuSolver.BL.Tests.csproj", "{0EC25251-207A-40EC-9989-3AAFAF07E841}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -25,10 +25,6 @@ Global
 		{07C71557-1496-454D-8863-A19564F0492F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{07C71557-1496-454D-8863-A19564F0492F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{07C71557-1496-454D-8863-A19564F0492F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F13734FD-2F8D-4AB0-B0E6-3828F90E51C2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F13734FD-2F8D-4AB0-B0E6-3828F90E51C2}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F13734FD-2F8D-4AB0-B0E6-3828F90E51C2}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F13734FD-2F8D-4AB0-B0E6-3828F90E51C2}.Release|Any CPU.Build.0 = Release|Any CPU
 		{7AB705F9-2152-441F-B829-C856AFC0CCAD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{7AB705F9-2152-441F-B829-C856AFC0CCAD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7AB705F9-2152-441F-B829-C856AFC0CCAD}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -41,12 +37,16 @@ Global
 		{C4556E76-130E-44A3-AA66-5BCD8FE86C82}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C4556E76-130E-44A3-AA66-5BCD8FE86C82}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C4556E76-130E-44A3-AA66-5BCD8FE86C82}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0EC25251-207A-40EC-9989-3AAFAF07E841}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0EC25251-207A-40EC-9989-3AAFAF07E841}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0EC25251-207A-40EC-9989-3AAFAF07E841}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0EC25251-207A-40EC-9989-3AAFAF07E841}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{F13734FD-2F8D-4AB0-B0E6-3828F90E51C2} = {A9E285F5-0FB5-4E0B-A99D-D970B5D108E0}
+		{0EC25251-207A-40EC-9989-3AAFAF07E841} = {A9E285F5-0FB5-4E0B-A99D-D970B5D108E0}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A248530C-7DA1-4DA4-9C67-74B93C528880}

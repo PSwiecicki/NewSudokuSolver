@@ -99,7 +99,7 @@ namespace SudokuSolver.BL
                     var currentField = Rows[rowIndex].Fields[columnIndex];
 
                     if (currentFieldToCopy.IsSet)
-                        error = currentField.SetValue(currentFieldToCopy.Value);
+                        error = currentField.SetValue(currentFieldToCopy.Value.Value);
                     else
                     {
                         var itemsToRemove = currentField.PossibleValues.Except(currentFieldToCopy.PossibleValues).ToList();
@@ -132,7 +132,7 @@ namespace SudokuSolver.BL
             {
                 for (int columnIndex = 0; columnIndex < 9; columnIndex++)
                 {
-                    Rows[rowIndex].InsertValue(columnIndex, sudoku.Rows[rowIndex].Fields[columnIndex].Value);
+                    Rows[rowIndex].InsertValue(columnIndex, sudoku.Rows[rowIndex].Fields[columnIndex].Value.Value);
                 }
             }
         }

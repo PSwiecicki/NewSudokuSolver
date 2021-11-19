@@ -10,7 +10,7 @@ namespace SudokuSolver.BL
     {
         public static Field AddContainer(this Field field, FieldsContainer container)
         {
-            field.ContainersWithThatField.Add(container);
+            field.AddNewContainer(container);
             container.Fields.Add(field);
             return field;
         }

@@ -29,7 +29,7 @@ namespace SudokuSolver.BL
                 var settedFields = Fields.Where(f => f.IsSet).ToList();
                 foreach(var field in settedFields)
                 {
-                    valueSetted.Add(field.Value);
+                    valueSetted.Add(field.Value.Value);
                 }
                 return valueSetted.Count == settedFields.Count;
             }

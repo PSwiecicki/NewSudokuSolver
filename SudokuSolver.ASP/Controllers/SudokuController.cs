@@ -31,6 +31,7 @@ namespace SudokuSolver.ASP.Controllers
             }
 
             result &= Services.SudokuService.InsertaData(dataTable);
+            
 
             return result;
         }

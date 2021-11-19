@@ -8,86 +8,137 @@ namespace SudokuSolver.BL
 {
     public class Field
     {
-        public List<FieldsContainer> ContainersWithThatField { get; set; }
-        private int value;
-        public List<int> PossibleValues { get; private set; }
-        public bool IsSet { get; private set; }
-        public int Value
+        private List<FieldsContainer> containersWithThatField;
+        private int? fieldValue;
+        private List<int> possibleValues;
+
+        public bool IsSet {
+            get
+            {
+                return fieldValue.HasValue;
+            }
+        }
+        public int? Value
         {
             get
             {
-                return value;
+                return fieldValue;
             }
             private set
             {
-                if (value == 0 && !IsSet)
+                if(!IsSet)
                 {
-                    this.value = 0;
-                    IsSet = false;
-                }
-                else if(value >= 1 && value <= 9 && !IsSet && PossibleValues.Contains(value))
-                {
-                    this.value = value;
-                    PossibleValues = null;
-                    IsSet = true;
-                    foreach (var container in ContainersWithThatField)
-                    {
-                        container.ValueToSet.Remove(Value);
-                        container.ClearPossibilities(Value);
-                    }
+                    CheckValueIsCorrect(value);
                 }
             }
-
         }
-
-        public Field(int value = 0)
-        {
-            PossibleValues = new List<int>() { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
-            ContainersWithThatField = new List<FieldsContainer>();
-            SetValue(value);
+        
+        public List<int> PossibleValues { 
+            get
+            {      
+                bool isNotNull = possibleValues != null;
+                if (isNotNull)
+                    return new List<int>(possibleValues);
+                else
+                    return null;
+            }
         }
-        public Field(List<int> possibleValues) : this(0)
+        public List<FieldsContainer> ContainersWithThatField
         {
-            var itemsToRemove = PossibleValues.Except(possibleValues).ToList();
-            RemovePossibility(itemsToRemove);
-        }
-
-
-        public bool RemovePossibility(int item)
-        {
-            bool result;
-            if(!IsSet)
+            get
             {
-                result = PossibleValues.Remove(item);
-                if (PossibleValues.Count == 1)
-                {
-                    Value = PossibleValues.First();
-                }
+                return new List<FieldsContainer>(containersWithThatField);
+            }
+        }
+
+        private void CheckValueIsCorrect(int? value)
+        {
+            if (!value.HasValue)
+            {
+                fieldValue = value;
             }
             else
             {
-                result = false;
+                int valueAsInt = value.Value;
+                if (possibleValues.Contains(valueAsInt))
+                {
+                    SetFieldValue(valueAsInt);
+                }
             }
-            return result;
         }
 
-        public bool RemovePossibility(List<int> items)
+        private void SetFieldValue(int value)
         {
-            bool result = false;
-            for(int i = 0; i < items.Count; i++)
+            fieldValue = value;
+            possibleValues = null;
+            RemovePossibilitiesFromContainersWithField(value);
+        }
+
+        private void RemovePossibilitiesFromContainersWithField(int value)
+        {
+            foreach (var container in containersWithThatField)
             {
-                result |= RemovePossibility(items[i]);
+                container.ValueToSet.Remove(value);
+                container.ClearPossibilities(value); // Tym powinna zajmować się kontener, nie pole.
             }
-            return result;
+        }
+
+        public Field(int? value = null, int size = 9)
+        {
+            possibleValues = new List<int>();
+            InitializePossibleValues(size);
+            containersWithThatField = new List<FieldsContainer>();
+            Value = value;
+        }
+
+        private void InitializePossibleValues(int size)
+        {
+            for (int i = 1; i <= size; i++)
+                possibleValues.Add(i);
+        }
+
+        public bool RemovePossibility(int valueToRemove)
+        {
+            bool wasRemoved = false;
+            if(!IsSet)
+            {
+                wasRemoved = possibleValues.Remove(valueToRemove);
+                CheckIfItsLastOption();
+            }
+            return wasRemoved;
+        }
+
+        private void CheckIfItsLastOption()
+        {
+            bool isLast = possibleValues.Count == 1;
+            if (isLast)
+            {
+                int onlyOption = possibleValues.First();
+                Value = onlyOption;
+            }
+        }
+
+        public bool RemovePossibility(List<int> valuesToRemove)
+        {
+            bool wasAnyRemoved = false;
+            foreach(var valueToRemove in valuesToRemove)
+            {
+                bool removeResult = RemovePossibility(valueToRemove);
+                wasAnyRemoved |= removeResult;
+            }
+            return wasAnyRemoved;
         }
 
         public bool SetValue(int value)
         {
             Value = value;
-            if (Value == value)
-                return true;
-            else
-                return false;
+            bool isSetDone = Value == value;
+            return isSetDone;
+        }
+
+        public void AddNewContainer(FieldsContainer container)
+        {
+            containersWithThatField.Add(container);
         }
 
         public override string ToString()
@@ -96,12 +147,14 @@ namespace SudokuSolver.BL
                 return Value.ToString();
             else
             {
-                string result = "";
-                foreach (var possibility in PossibleValues)
-                    result += possibility + ", ";
-                result = result.Remove(result.Length - 2, 2);
-                return result;
+                return GetPossibilitiesString();
             }
+        }
+
+        private string GetPossibilitiesString()
+        {
+            string longerString = string.Join(", ", possibleValues);
+            return longerString;
         }
 
         public override bool Equals(object obj)
@@ -114,12 +167,12 @@ namespace SudokuSolver.BL
                     return Value.Equals(field.Value);
                 else if (field.Value != 0)
                     return false;
-                else if (PossibleValues.Count != field.PossibleValues.Count)
+                else if (possibleValues.Count != field.possibleValues.Count)
                     return false;
                 else
                 {
-                    for (int i = 0; i < PossibleValues.Count; i++)
-                        if (PossibleValues[i] != field.PossibleValues[i])
+                    for (int i = 0; i < possibleValues.Count; i++)
+                        if (possibleValues[i] != field.possibleValues[i])
                             return false;
                 }
             }
@@ -130,9 +183,9 @@ namespace SudokuSolver.BL
         {
             int hashCode = 0;
             if (IsSet)
-                hashCode = Value;
+                hashCode = (int)Value;
             else
-                foreach (var possibility in PossibleValues)
+                foreach (var possibility in possibleValues)
                     hashCode = hashCode * 10 + possibility;
             return hashCode;
         }

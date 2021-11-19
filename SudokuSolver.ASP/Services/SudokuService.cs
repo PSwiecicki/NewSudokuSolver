@@ -38,15 +38,23 @@ namespace SudokuSolver.ASP.Services
                 result.Add(new List<int>());
                 foreach(var field in row.Fields)
                 {
-                    result[result.Count - 1].Add(field.Value);
+                    result[result.Count - 1].Add(field.Value.Value);
                 }
             }
             return result;
         }
         public static bool InsertaData(int[,] data)
         {
+            var result = true;
             sudoku.InsertData(data);
-            return sudoku.IsValid;
+            for(var row = 0; row < sudoku.Rows.Count; row++)
+            {
+                for (var column = 0; column < sudoku.Rows[row].Fields.Count; column++)
+                {
+                    result &= data[row, column] == sudoku.Rows[row].Fields[column].Value;
+                }
+            }
+            return result;
         }
     }
 }
